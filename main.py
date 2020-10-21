@@ -18,12 +18,13 @@ def main():
 
     #Where the image should be saved, by default is the same directory
     #that this file is in
-    path = ""
+    dirname, filename = os.path.split(os.path.abspath(__file__))
+    path = dirname
     
     
-    testImage = Image.open("images/toocant.jpg").resize((512, 512))
-    testImage = imgM.invertColor(testImage)
-    testImage.show()
+    #testImage = Image.open("images/toocant.jpg").resize((512, 512))
+    #testImage = imgM.invertColor(testImage)
+    #testImage.show()
 
 
 

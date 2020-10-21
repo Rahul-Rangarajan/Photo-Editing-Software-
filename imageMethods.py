@@ -31,7 +31,7 @@ def invertColor(image):
     return new
 #invertColor
 
-def imageMethod(image, otherParam="null")
+def imageMethod(image, otherParam="null"):
     #Do something
     x = 2 + 3
 
