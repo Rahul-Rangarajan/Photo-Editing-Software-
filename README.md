@@ -1,6 +1,7 @@
 # Week2Project #
 
-This is our project for the 2nd week of CSC355: Open Source Development. The program is a GUI that uses the Python Imaging Library(Pillow) to modify included images with different "filters" that each of us came up with.
+This is our project for the 2nd week of CSC355: Open Source Development. This program uses a GUI that edits images with 
+custom made "filters" made from the Python Imaging Library(Pillow). The editable photos are included in the "images" folder.
 
 ### Requirements ###
 
@@ -22,7 +23,14 @@ pip install os.sys
 
 Simply download the contents of this repository and run main.py.
 
-### Contribution ###
+### Authors ###
+
+* Jack Castiglione
+* Rahul Rangarajan
+* Cameron King
+* Nick Jonas
+
+### Contributions ###
 
 At this moment in time, we aren't taking any pull requests outside our group.
 
