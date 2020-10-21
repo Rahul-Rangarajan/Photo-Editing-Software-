@@ -13,6 +13,10 @@ pip install numpy
 ```
 pip install Pillow
 ```
+* OS.sys
+```
+pip install os.sys
+```
 
 ### Installation ###
 
