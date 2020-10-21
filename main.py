@@ -15,11 +15,11 @@ import imageMethods as imgM
 
 def main():
     print("Hi")
-
+    image = Image.open("images/Leia.jpg")
     #Where the image should be saved, by default is the same directory
     #that this file is in
-    dirname, filename = os.path.split(os.path.abspath(__file__))
-    path = dirname
+    path, filename = os.path.split(os.path.abspath(__file__))
+    print(filename)
     
     
     #testImage = Image.open("images/toocant.jpg").resize((512, 512))
