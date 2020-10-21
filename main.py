@@ -15,6 +15,11 @@ import imageMethods as imgM
 
 def main():
     print("Hi")
+
+    #Where the image should be saved, by default is the same directory
+    #that this file is in
+    path = ""
+    
     
     testImage = Image.open("images/toocant.jpg").resize((512, 512))
     testImage = imgM.invertColor(testImage)

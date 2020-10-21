@@ -29,6 +29,7 @@ def invertColor(image):
     #Convert new array to image and return
     new = Image.fromarray(newAr)
     return new
+#invertColor
 
 def imageMethod(image, otherParam="null")
     #Do something
@@ -36,6 +37,6 @@ def imageMethod(image, otherParam="null")
 
     #Return an Image
     return image
+#imageMethod
 
-    
     
