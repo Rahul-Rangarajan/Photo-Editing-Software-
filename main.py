@@ -14,6 +14,11 @@ import os
 
 def main():
     print("Hi")
+    tImage = Image.open("images/Leia.jpg")
+
+
+
+
 
 if __name__ == "__main__":
     main()
