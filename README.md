@@ -1,29 +1,27 @@
-# README #
+# Week2Project #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This is our project for the 2nd week of CSC355: Open Source Development. The program is a GUI that uses the Python Imaging Library(Pillow) to modify included images with different "filters" that each of us came up with.
 
-### What is this repository for? ###
+### Requirements ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* [Install Python](https://www.python.org/downloads/)
+* Numpy
+```
+pip install numpy
+```
+* Pillow
+```
+pip install Pillow
+```
 
-### How do I get set up? ###
+### Installation ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Simply download the contents of this repository and run main.py.
 
-### Contribution guidelines ###
+### Contribution ###
 
-* Writing tests
-* Code review
-* Other guidelines
+At this moment in time, we aren't taking any pull requests outside our group.
 
-### Who do I talk to? ###
+### License ###
 
-* Repo owner or admin
-* Other community or team contact
+TODO: Figure out if we need a license and which license we should use if we need one.
