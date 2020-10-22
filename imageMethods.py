@@ -99,35 +99,94 @@ def addBrightness(image):
 
 #Deepfry an image
 def deepFry(image):
-    #Save the size of the image to W and H
-    imageW, imageH = image.size
+    """Deepfrys an input image.
+
+    Takes a specified rgb name and increases it in all instances of the picture.
+    Also decreases a non specified rgb value so the photo doesn't become
+    completely white.
+    """
     
-    for i in range(imageW):  # width
-        for j in range(imageH):  # height
-            pixel = image.getpixel((i, j))
-            # print(pixel)
-            r = pixel[0]
-            g = pixel[1]
-            b = pixel[2]
-            if g >= 50:  # reducing green beyond a point
-                g = g - 50
-                
-            if r <= 205:  # increasing red below a point
-                r = r + 50
-                
-            newColor = (r, g, 0)  # modifying the pixel rgb values
-            image.putpixel((i, j), newColor)  # Places in new rgb values
+    imageW, imageH = image.size
+    Domcolor = input("Enter the dominant rgb value: ")
+    Domcolor = Domcolor.lower()
+    if Domcolor == "red":
+        imageW, imageH = image.size
+        for i in range(imageW):  # width
+            for j in range(imageH):  # height
+                pixel = image.getpixel((i, j))
+                # print(pixel)
+                r = pixel[0]
+                g = pixel[1]
+                b = pixel[2]
+                if g >= 50:  # reducing green beyond a point
+                    g = g - 50
+                if r <= 205:  # increasing red below a point
+                    r = r + 50
+                newColor = (r, g, 0)  # modifying the pixel rgb values
+                image.putpixel((i, j), newColor)  # Places in new rgb values
+            #for
         #for
-    #for
+                
+        contrast = ImageEnhance.Contrast(image)
+        imageCon = contrast.enhance(3.0)
+        # upping the contrast to create distinction between colors
+        bright = ImageEnhance.Brightness(imageCon)
+        # upping the brightness to emphasize the bighter colors
+        return bright.enhance(3.0)
+    #if
+    
+    elif Domcolor == "blue":
+        for i in range(imageW):  # width
+            for j in range(imageH):  # height
+                pixel = image.getpixel((i, j))
+                # print(pixel)
+                r = pixel[0]
+                g = pixel[1]
+                b = pixel[2]
+                if r >= 50:  # reducing green beyond a point
+                    r = r - 50
+                if b <= 205:  # increasing red below a point
+                    b = b + 50
+                newColor = (r, 0, b)  # modifying the pixel rgb values
+                image.putpixel((i, j), newColor)  # Places in new rgb values
+            #for
+        #for
+                
+        contrast = ImageEnhance.Contrast(image)
+        imageCon = contrast.enhance(3.0)
+        # upping the contrast to create distinction between colors
 
-    contrast = ImageEnhance.Contrast(image)
-    imageCon = contrast.enhance(3.0)
-    # upping the contrast to create distinction between colors
-
-    bright = ImageEnhance.Brightness(imageCon)
-    return bright.enhance(3.0)
-    # upping the brightness to emphasize the bighter colors
+        bright = ImageEnhance.Brightness(imageCon)
+        # upping the brightness to emphasize the bighter colors
+        return bright.enhance(3.0)
+    #if
+    
+    elif Domcolor == "green":
+        for i in range(imageW):  # width
+            for j in range(imageH):  # height
+                pixel = image.getpixel((i, j))
+                # print(pixel)
+                r = pixel[0]
+                g = pixel[1]
+                b = pixel[2]
+                if b >= 50:  # reducing green beyond a point
+                    b = b - 50
+                if g <= 205:  # increasing red below a point
+                    g = g + 50
+                newColor = (0, g, b)  # modifying the pixel rgb values
+                image.putpixel((i, j), newColor)  # Places in new rgb values
+            #for
+        #for
+        contrast = ImageEnhance.Contrast(image)
+        imageCon = contrast.enhance(3.0)
+        # upping the contrast to create distinction between colors
+        bright = ImageEnhance.Brightness(imageCon)
+        # upping the brightness to emphasize the bighter colors
+        return bright.enhance(3.0)
+    #if
+    
 #deepFry()
+
 
 #Create an image with one half of one image and one half of another,
 #with a horizontal divide
