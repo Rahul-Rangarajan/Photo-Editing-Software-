@@ -57,7 +57,7 @@ def blackNWhite(image):
     arrayC = np.asarray(grayC).copy()
 
     #Set colors below 128 to black and other values to white
-    arrayC[arrayC = 128] = 0  # black
+    arrayC[arrayC <= 128] = 0  # black
     arrayC[arrayC >= 128] = 255  # white
 
     #Convert array back to image and returns
@@ -192,6 +192,28 @@ def halfNHalfVertical(image1, image2):
     #Return an image created from the new array
     return Image.fromarray(newAr)
 #halfNHalfVertical
+
+def colorscale(image, color):
+    #Save image size
+    image1 = greyscale(image)
+    imageArray = np.asarray(image1)
+    height = imageArray.shape[0]
+    width = imageArray.shape[1]
+
+    #Create final location
+    final = np.ndarray(shape=(height, width, 4), dtype=np.uint8)
+
+    #Perform an operation for each pixel in the image
+    for i in range(height):
+        for j in range(width):
+            #Create an RGB value from the color and grey level
+            for k in range(3):
+                final[i][j][k] = (imageArray[i][j][k] / 256) * color[k]
+            #Insert alpha value
+            final[i][j][3] = color[3]
+
+    return Image.fromarray(final)
+#colorscale()
 
 #Do Something
 def imageMethod(image, otherParam="null"):
