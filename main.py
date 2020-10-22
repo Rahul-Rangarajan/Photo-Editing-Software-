@@ -11,6 +11,7 @@ from PIL import Image
 import tkinter as tk
 import os
 import imageMethods as imgM
+import colorsLib as colors
 
 
 def main():
