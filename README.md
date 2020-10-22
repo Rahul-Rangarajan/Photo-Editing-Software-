@@ -36,4 +36,5 @@ At this moment in time, we aren't taking any pull requests outside our group.
 
 ### License ###
 
-TODO: Figure out if we need a license and which license we should use if we need one.
+This project was created by Jack Castiglione, Rahul Rangarajan, Cameron King and Nick Jonas. It is free software 
+and may be redistributed under the terms specified in the [LICENSE](https://bitbucket.org/Breadstix/week2project/src/master/LICENSE) file.
