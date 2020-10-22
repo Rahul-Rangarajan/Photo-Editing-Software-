@@ -18,7 +18,7 @@ def main():
     print("Hi")
     image = Image.open("images/Leia.jpg")
     image = image.convert("RGBA")
-    image = imgM.blackNWhite(image)
+    image = imgM.colorscale(image, colors.white)
     image.show()
     
     #Where the image should be saved, by default is the same directory
