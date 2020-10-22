@@ -11,14 +11,16 @@ from PIL import Image
 import tkinter as tk
 import os
 import imageMethods as imgM
+import colorsLib as colors
 
 
 def main():
     print("Hi")
     image = Image.open("images/Leia.jpg")
     image = image.convert("RGBA")
-    image1 = imgM.greyscale(image)
-    imgM.halfNHalfVertical(image, image1).show()
+    image = imgM.blackNWhite(image)
+    image.show()
+    
     #Where the image should be saved, by default is the same directory
     #that this file is in
     path, filename = os.path.split(os.path.abspath(__file__))
