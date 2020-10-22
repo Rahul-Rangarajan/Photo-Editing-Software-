@@ -36,7 +36,7 @@ def greyscale(image):
     greyImage = image.convert("L")
 
     #Convert back to RGBA
-    greyImage = image.convert("RGBA")
+    greyImage = greyImage.convert("RGBA")
 
     #returns greyscaled image
     return greyImage
@@ -69,6 +69,88 @@ def createContour(image):
     return imageFinal
 #createContour()
 
+def createContrast(image):
+    contrast = ImageEnhance.Contrast(image)
+    return contrast.enhance(7.0)
+#createContrast()
+
+def createBrightness(image):
+    bright = ImageEnhance.Brightness(image)
+    return bright.enhance(3.0)
+#createBrightness()
+
+def deepFry(image):
+    imageW, imageH = image.size
+    for i in range(imageW):  # width
+        for j in range(imageH):  # height
+            pixel = image.getpixel((i, j))
+            # print(pixel)
+            r = pixel[0]
+            g = pixel[1]
+            b = pixel[2]
+            if g >= 50:  # reducing green beyond a point
+                g = g - 50
+            if r <= 205:  # increasing red below a point
+                r = r + 50
+            newColor = (r, g, 0)  # modifying the pixel rgb values
+            image.putpixel((i, j), newColor)  # Places in new rgb values
+
+    contrast = ImageEnhance.Contrast(image)
+    imageCon = contrast.enhance(3.0)
+    # upping the contrast to create distinction between colors
+
+    bright = ImageEnhance.Brightness(imageCon)
+    return bright.enhance(3.0)
+    # upping the brightness to emphasize the bighter colors
+#deepFry()
+
+def halfNHalfHorizontal(image1, image2):
+    image1 = image1.convert("RGBA")
+    image2 = image2.convert("RGBA")
+
+    h, w = image1.size
+
+    image1Array = np.asarray(image1)
+    image2Array = np.asarray(image2)
+
+    size = image1Array.shape
+    newAr = np.empty((h, w, 4), np.uint8)
+
+    image2.show()
+
+    for i in range(size[0]):
+        for j in range(size[1]):
+            if i < size[0] // 2:
+                newAr[i][j] = image1Array[i][j]
+            else:
+                newAr[i][j] = image2Array[i][j]
+    #for
+
+    return Image.fromarray(newAr)
+#halfNHalfHorizontal()
+
+def halfNHalfVertical(image1, image2):
+    image1 = image1.convert("RGBA")
+    image2 = image2.convert("RGBA")
+
+    h1, w1 = image1.size
+    h2, w2 = image2.size
+
+    image1Array = np.asarray(image1)
+    image2Array = np.asarray(image2)
+
+    newAr = np.empty((w1, h1, 4), np.uint8)
+
+    for i in range(w1):
+        for j in range(h1):
+            if j < h1 // 2:
+                newAr[i][j] = image1Array[i][j]
+            else:
+                newAr[i][j] = image2Array[i][j]
+    # for
+
+    return Image.fromarray(newAr)
+#halfNHalfVertical
 
 #Do Something
 def imageMethod(image, otherParam="null"):
