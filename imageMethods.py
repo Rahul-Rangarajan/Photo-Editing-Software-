@@ -25,12 +25,17 @@ def invertColor(image):
         for y in range(image.width):
             for z in range(3):
                 newAr[x][y][z] = 255 - ar[x][y][z]
+            #for
+        #for
+    #for
 
     #Convert new array to image and return
     new = Image.fromarray(newAr)
     return new
 #invertColor()
 
+
+#Greyscale an image
 def greyscale(image):
     #Convert image to greyscale
     greyImage = image.convert("L")
@@ -42,45 +47,61 @@ def greyscale(image):
     return greyImage
 #greyscale()
 
-def blackNWhite(image):
 
+#Convert to purely black and white
+def blackNWhite(image):
     #Convert image to grey
     grayC = image.convert("L")
 
     #Convert image to array that is not read only
     arrayC = np.asarray(grayC).copy()
 
-    arrayC[arrayC < 128] = 0  # black
-    arrayC[arrayC > 128] = 255  # white
+    #Set colors below 128 to black and other values to white
+    arrayC[arrayC = 128] = 0  # black
+    arrayC[arrayC >= 128] = 255  # white
 
     #Convert array back to image and returns
     black_n_white_cosmo = Image.fromarray(arrayC)
     return black_n_white_cosmo
 #blackNWhite()
 
+
+#Add contour to each image
 def createContour(image):
+    #Apply Contour filter
     imageContour = image.copy()
-    imageContour= imageContour.filter(ImageFilter.CONTOUR)  # Apply Contour filter
+    imageContour= imageContour.filter(ImageFilter.CONTOUR)
 
+    #Take out some of the color
     enhancer = ImageEnhance.Color(image)
-    image = enhancer.enhance(0.3)  # take out some of the color
+    image = enhancer.enhance(0.3)  
 
-    imageFinal = Image.blend(image, imageContour, 0.4)  # blend the images together
+    #Blend the images together
+    imageFinal = Image.blend(image, imageContour, 0.4)  
     return imageFinal
 #createContour()
 
-def createContrast(image):
+
+#Add conrast to an image
+def addContrast(image):
+    #Use the pillow contrast method to add contrast
     contrast = ImageEnhance.Contrast(image)
     return contrast.enhance(7.0)
-#createContrast()
+#addContrast()
 
-def createBrightness(image):
+#Add brightness to an image
+def addBrightness(image):
+    #Use the pillow brightness method to add brightness
     bright = ImageEnhance.Brightness(image)
     return bright.enhance(3.0)
-#createBrightness()
+#addBrightness()
 
+
+#Deepfry an image
 def deepFry(image):
+    #Save the size of the image to W and H
     imageW, imageH = image.size
+    
     for i in range(imageW):  # width
         for j in range(imageH):  # height
             pixel = image.getpixel((i, j))
@@ -90,10 +111,14 @@ def deepFry(image):
             b = pixel[2]
             if g >= 50:  # reducing green beyond a point
                 g = g - 50
+                
             if r <= 205:  # increasing red below a point
                 r = r + 50
+                
             newColor = (r, g, 0)  # modifying the pixel rgb values
             image.putpixel((i, j), newColor)  # Places in new rgb values
+        #for
+    #for
 
     contrast = ImageEnhance.Contrast(image)
     imageCon = contrast.enhance(3.0)
@@ -104,51 +129,67 @@ def deepFry(image):
     # upping the brightness to emphasize the bighter colors
 #deepFry()
 
+#Create an image with one half of one image and one half of another,
+#with a horizontal divide
 def halfNHalfHorizontal(image1, image2):
+    #Convert both images to RGBA
     image1 = image1.convert("RGBA")
     image2 = image2.convert("RGBA")
 
+    #Determine the size of the image
     h, w = image1.size
 
+    #Create arrays for each image
     image1Array = np.asarray(image1)
     image2Array = np.asarray(image2)
 
+    #Create an empty array with the same dimensions
     size = image1Array.shape
     newAr = np.empty((h, w, 4), np.uint8)
 
-    image2.show()
-
+    #Set each pixel in the new array to the pixel from the proper image
     for i in range(size[0]):
         for j in range(size[1]):
             if i < size[0] // 2:
                 newAr[i][j] = image1Array[i][j]
             else:
                 newAr[i][j] = image2Array[i][j]
+        #for
     #for
 
+    #Return an image created from the new array
     return Image.fromarray(newAr)
 #halfNHalfHorizontal()
 
+#Create an image with one half of one image and one half of another,
+#with a vertical divide
 def halfNHalfVertical(image1, image2):
+    #Convert both images to RGBA
     image1 = image1.convert("RGBA")
     image2 = image2.convert("RGBA")
 
+    #Determine the size of the image
     h1, w1 = image1.size
     h2, w2 = image2.size
 
+    #Create arrays for each image
     image1Array = np.asarray(image1)
     image2Array = np.asarray(image2)
 
+    #Create an empty array with the same dimensions
     newAr = np.empty((w1, h1, 4), np.uint8)
 
+    #Set each pixel in the new array to the pixel from the proper image
     for i in range(w1):
         for j in range(h1):
             if j < h1 // 2:
                 newAr[i][j] = image1Array[i][j]
             else:
                 newAr[i][j] = image2Array[i][j]
-    # for
+        #for
+    #for
 
+    #Return an image created from the new array
     return Image.fromarray(newAr)
 #halfNHalfVertical
 
