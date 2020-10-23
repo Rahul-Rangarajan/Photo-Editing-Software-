@@ -15,6 +15,7 @@ import imageMethods as imgM
 import colorsLib as colors
 image = Image.open("images/Leia.jpg")
 originalImage = Image.open("images/Leia.jpg")
+stack = []
 
 
 def main():
@@ -53,6 +54,9 @@ def main():
     resetImageButton = tk.Button(master, text="Reset", command=lambda: resetImage(master, canvas))
     resetImageButton.pack()
 
+    revertImageButton = tk.Button(master, text="Undo", command=lambda: revertImage(master, canvas))
+    revertImageButton.pack()
+
     displayNewImage(startframe, canvas)
 
     master.mainloop()
@@ -67,7 +71,9 @@ def chooseFile():
     global image
     global originalImage
     image = Image.open(file)
+    image.convert("RGBA")
     originalImage = Image.open(file)
+    originalImage.convert("RGBA")
     h,w = image.size
     if h==w or h>w:
         image = image.resize((512 , int(512*w/h)))
@@ -81,11 +87,13 @@ def chooseFile():
 #chooseFile()
 
 def saveImage(image):
+    tk.filedialog.asksaveasfilename()
     image.save("images2/Leia Edited.jpg")
 #saveImage()
 
 def confirmButton(variable, master, canvas):
-    global image
+    global stack, image
+    stack.append(image)
     if variable == "Invert Color":
         image = imgM.invertColor(image)
         displayNewImage(master, canvas)
@@ -126,15 +134,15 @@ def confirmButton(variable, master, canvas):
 #confirmButton()
 
 def displayNewImage(master, canvas):
-    print("displaying")
+    global image
+    w,h = image.size
     one = ImageTk.PhotoImage(image)
     master.one = one  # to prevent the image garbage collected.
-    canvas.create_image((0, 0), image=one, anchor='nw')
+    canvas.create_image((w, 0), image=one, anchor='n')
 #displayNewImage()
 
 def deepFry(root, Domcolor, master, canvas):
     global image
-    print(Domcolor)
     image = imgM.deepFry(image, Domcolor)
     root.destroy()
     displayNewImage(master, canvas)
@@ -146,5 +154,15 @@ def resetImage(master, canvas):
     image = originalImage
     displayNewImage(master, canvas)
 
+def revertImage(master, canvas):
+    global originalImage, image, stack
+    if len(stack) == 0:
+        image = originalImage
+    else:
+        latest = len(stack)-1
+        image = stack[latest]
+        stack.remove(stack[latest])
+
+    displayNewImage(master, canvas)
 if __name__ == "__main__":
     main()

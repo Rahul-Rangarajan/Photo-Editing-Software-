@@ -53,6 +53,9 @@ def blackNWhite(image):
     #Convert image to grey
     grayC = image.convert("L")
 
+    #Convert image to RGBA
+    grayC = image.convert("RGBA")
+
     #Convert image to array that is not read only
     arrayC = np.asarray(grayC).copy()
 
