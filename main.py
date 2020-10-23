@@ -69,8 +69,8 @@ def main():
     #print(filename)
 
 def chooseFile(master, canvas):
-    file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", "*.jpg*"), ("PNG files", "*.png*"),
-                                                                                           ("JPEG files", "*.jpeg*")))
+    file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", "*.jpg"), ("PNG files", "*.png"),
+                                                                                           ("JPEG files", "*.jpeg")))
     global image, originalImage, stack
     image = Image.open(file)
     image.convert("RGBA")
