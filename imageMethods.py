@@ -53,6 +53,9 @@ def blackNWhite(image):
     #Convert image to grey
     grayC = image.convert("L")
 
+    #Convert image to RGBA
+    grayC = image.convert("RGBA")
+
     #Convert image to array that is not read only
     arrayC = np.asarray(grayC).copy()
 
@@ -98,7 +101,7 @@ def addBrightness(image):
 
 
 #Deepfry an image
-def deepFry(image):
+def deepFry(image, Domcolor):
     """Deepfrys an input image.
 
     Takes a specified rgb name and increases it in all instances of the picture.
@@ -107,7 +110,6 @@ def deepFry(image):
     """
     
     imageW, imageH = image.size
-    Domcolor = input("Enter the dominant rgb value: ")
     Domcolor = Domcolor.lower()
     if Domcolor == "red":
         imageW, imageH = image.size
@@ -191,32 +193,31 @@ def deepFry(image):
 #Create an image with one half of one image and one half of another,
 #with a horizontal divide
 def halfNHalfHorizontal(image1, image2):
-    #Convert both images to RGBA
+    # Convert both images to RGBA
     image1 = image1.convert("RGBA")
     image2 = image2.convert("RGBA")
 
-    #Determine the size of the image
-    h, w = image1.size
+    # Determine the size of the image
+    h1, w1 = image1.size
 
-    #Create arrays for each image
+    # Create arrays for each image
     image1Array = np.asarray(image1)
     image2Array = np.asarray(image2)
 
-    #Create an empty array with the same dimensions
-    size = image1Array.shape
-    newAr = np.empty((h, w, 4), np.uint8)
+    # Create an empty array with the same dimensions
+    newAr = np.empty((w1, h1, 4), np.uint8)
 
-    #Set each pixel in the new array to the pixel from the proper image
-    for i in range(size[0]):
-        for j in range(size[1]):
-            if i < size[0] // 2:
+    # Set each pixel in the new array to the pixel from the proper image
+    for i in range(w1):
+        for j in range(h1):
+            if i < w1 // 2:
                 newAr[i][j] = image1Array[i][j]
             else:
                 newAr[i][j] = image2Array[i][j]
-        #for
-    #for
+        # for
+    # for
 
-    #Return an image created from the new array
+    # Return an image created from the new array
     return Image.fromarray(newAr)
 #halfNHalfHorizontal()
 
@@ -229,7 +230,6 @@ def halfNHalfVertical(image1, image2):
 
     #Determine the size of the image
     h1, w1 = image1.size
-    h2, w2 = image2.size
 
     #Create arrays for each image
     image1Array = np.asarray(image1)
