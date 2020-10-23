@@ -14,12 +14,13 @@ import os
 import imageMethods as imgM
 import colorsLib as colors
 image = Image.open("images/Leia.jpg")
+originalImage = Image.open("images/Leia.jpg")
 
 
 def main():
     print("Hi")
     master = tk.Tk()
-    master.geometry("800x700")
+    master.geometry("562x700")
 
     chooseFile()
 
@@ -49,6 +50,9 @@ def main():
     confirmOptionsButton = tk.Button(master, text="Confirm", command=lambda: confirmButton(variable.get(),master, canvas))
     confirmOptionsButton.pack()
 
+    resetImageButton = tk.Button(master, text="Reset", command=lambda: resetImage(master, canvas))
+    resetImageButton.pack()
+
     displayNewImage(startframe, canvas)
 
     master.mainloop()
@@ -58,54 +62,89 @@ def main():
     #print(filename)
 
 def chooseFile():
-    file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
+    file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", "*.jpg*"), ("PNG files", "*.png*"),
+                                                                                           ("JPEG files", "*.jpeg*")))
     global image
+    global originalImage
     image = Image.open(file)
+    originalImage = Image.open(file)
     h,w = image.size
-    if h>512 or w>512:
-        if h==w or h>w:
-            image = image.resize((512 , int(512*w/h)))
-        else:
-            image = image.resize((int(512*h/w) , 512))
+    if h==w or h>w:
+        image = image.resize((512 , int(512*w/h)))
+        originalImage = originalImage.resize((512, int(512 * w / h)))
+    else:
+        image = image.resize((int(512*h/w) , 512))
+        originalImage = originalImage.resize((int(512 * h / w), 512))
+
+
 
 #chooseFile()
 
 def saveImage(image):
-    image.save("images/Leia Edited.jpg")
+    image.save("images2/Leia Edited.jpg")
 #saveImage()
 
 def confirmButton(variable, master, canvas):
     global image
     if variable == "Invert Color":
         image = imgM.invertColor(image)
+        displayNewImage(master, canvas)
     elif variable == "Greyscale":
         image = imgM.greyscale(image)
+        displayNewImage(master, canvas)
     elif variable == "Black and White":
         image = imgM.blackNWhite(image)
+        displayNewImage(master, canvas)
     elif variable == "Create Contour":
         image = imgM.createContour(image)
+        displayNewImage(master, canvas)
     elif variable == "Add Contrast":
         image = imgM.addContrast(image)
+        displayNewImage(master, canvas)
     elif variable == "Increase Brightness":
         image = imgM.addBrightness(image)
+        displayNewImage(master, canvas)
     elif variable == "Deep Fry":
-        image = imgM.deepFry(image)
-    elif variable == "Split Horizontally":
-        root = tk.Tk()
-        image = imgM.halfNHalfHorizontal(image)
-    elif variable == "Split Vertically":
-        image = imgM.halfNHalfVertical(image)
+        root = tk.Toplevel()
 
-    displayNewImage(master, canvas)
+        Options = ["red", "blue", "green"]
+        variable = tk.StringVar(root)
+        variable.set(Options[0])  # default value
+
+        w = tk.OptionMenu(root, variable, *Options)
+        w.pack()
+
+        confirmOptionsButton = tk.Button(root, text="Confirm",
+                                         command=lambda: deepFry(root, variable.get(), master, canvas))
+        confirmOptionsButton.pack()
+    elif variable == "Split Horizontally":
+        image = imgM.halfNHalfHorizontal(image, originalImage)
+        displayNewImage(master, canvas)
+    elif variable == "Split Vertically":
+        image = imgM.halfNHalfVertical(image, originalImage)
+        displayNewImage(master, canvas)
 #confirmButton()
 
 def displayNewImage(master, canvas):
-
+    print("displaying")
     one = ImageTk.PhotoImage(image)
     master.one = one  # to prevent the image garbage collected.
     canvas.create_image((0, 0), image=one, anchor='nw')
 #displayNewImage()
 
+def deepFry(root, Domcolor, master, canvas):
+    global image
+    print(Domcolor)
+    image = imgM.deepFry(image, Domcolor)
+    root.destroy()
+    displayNewImage(master, canvas)
+#deepFry()
+
+def resetImage(master, canvas):
+    global image
+    global originalImage
+    image = originalImage
+    displayNewImage(master, canvas)
 
 if __name__ == "__main__":
     main()
