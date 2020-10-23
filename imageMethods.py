@@ -274,6 +274,15 @@ def colorscale(image, color):
     return Image.fromarray(final)
 #colorscale()
 
+def fadeFilter(imgOne, imgTwo)
+    """Uses a premade Filter to create a fade between two images"""
+    imgOneW, imgOneH = imgOne.size
+    fade = Image.open("images/FadeFilter.jpg").convert("L") #Grab custom mask
+    fade = fade.resize(imgOneW, imgOneH)
+    img = Image.composite(imgOne, imgTwo, fade) #Use mask to create a blend/fade
+    return img
+#fadeFilter
+
 #Do Something
 def imageMethod(image, otherParam="null"):
     #Do something
