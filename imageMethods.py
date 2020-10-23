@@ -53,9 +53,6 @@ def blackNWhite(image):
     #Convert image to grey
     grayC = image.convert("L")
 
-    #Convert image to RGBA
-    grayC = image.convert("RGBA")
-
     #Convert image to array that is not read only
     arrayC = np.asarray(grayC).copy()
 
@@ -65,6 +62,8 @@ def blackNWhite(image):
 
     #Convert array back to image and returns
     black_n_white_cosmo = Image.fromarray(arrayC)
+    # Convert image to RGBA
+    black_n_white_cosmo = black_n_white_cosmo.convert("RGBA")
     return black_n_white_cosmo
 #blackNWhite()
 
@@ -274,22 +273,30 @@ def colorscale(image, color):
     return Image.fromarray(final)
 #colorscale()
 
-def fadeFilter(imgOne, imgTwo)
+def fadeFilter(imgOne, imgTwo):
     """Uses a premade Filter to create a fade between two images"""
     imgOneW, imgOneH = imgOne.size
     fade = Image.open("images/FadeFilter.jpg").convert("L") #Grab custom mask
-    fade = fade.resize(imgOneW, imgOneH)
+    fade = fade.resize((imgOneW, imgOneH), Image.NEAREST)
     img = Image.composite(imgOne, imgTwo, fade) #Use mask to create a blend/fade
     return img
 #fadeFilter
 
-#Do Something
-def imageMethod(image, otherParam="null"):
-    #Do something
-    x = 2 + 3
+def comicBook(image):
+    #Convert image to grey
+    grayC = image.convert("L")
 
-    #Return an Image
-    return image
-#imageMethod
+    #Convert image to RGBA
+    grayC = image.convert("RGBA")
 
-    
+    #Convert image to array that is not read only
+    arrayC = np.asarray(grayC).copy()
+
+    #Set colors below 128 to black and other values to white
+    arrayC[arrayC <= 128] = 0  # black
+    arrayC[arrayC >= 128] = 255  # white
+
+    #Convert array back to image and returns
+    black_n_white_cosmo = Image.fromarray(arrayC)
+    return black_n_white_cosmo
+#comicBook()

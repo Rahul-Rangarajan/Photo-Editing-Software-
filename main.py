@@ -21,27 +21,30 @@ stack = []
 def main():
     print("Hi")
     master = tk.Tk()
-    master.geometry("562x700")
+    master.configure(bg='grey45')
 
-    chooseFile()
+    startframe = tk.Frame(master)
+    canvas = tk.Canvas(startframe, width=512, height=512)
+    canvas.configure(bg='grey30')
+
+
+    chooseFile(master, canvas)
 
     #Allows for re-choosing image
-    chooseImageButton = tk.Button(master, text="Choose New Image", command=lambda: chooseFile())
+    chooseImageButton = tk.Button(master, text="Choose New Image", command=lambda: chooseFile(master, canvas))
     chooseImageButton.pack()
 
     #saves current image
     saveImageButton = tk.Button(master, text="Save Image", command=lambda: saveImage(image))
     saveImageButton.pack()
 
-    startframe = tk.Frame(master)
-    canvas = tk.Canvas(startframe, width=512, height=512)
     startframe.pack()
     canvas.pack()
 
     #array of functions that create effects and filters of images
     Options = ["Invert Color", "Greyscale", "Black and White", "Create Contour",
                "Add Contrast", "Increase Brightness", "Deep Fry",
-               "Split Horizontally", "Split Vertically"]
+               "Split Horizontally", "Split Vertically", "Fade Image", "Comic Book"]
     variable = tk.StringVar(master)
     variable.set(Options[0])  # default value
 
@@ -65,11 +68,10 @@ def main():
     #path, filename = os.path.split(os.path.abspath(__file__))
     #print(filename)
 
-def chooseFile():
+def chooseFile(master, canvas):
     file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", "*.jpg*"), ("PNG files", "*.png*"),
                                                                                            ("JPEG files", "*.jpeg*")))
-    global image
-    global originalImage
+    global image, originalImage, stack
     image = Image.open(file)
     image.convert("RGBA")
     originalImage = Image.open(file)
@@ -81,9 +83,10 @@ def chooseFile():
     else:
         image = image.resize((int(512*h/w) , 512))
         originalImage = originalImage.resize((int(512 * h / w), 512))
-
-
-
+    master.geometry(str(image.size[0] + 50) + "x" + str(image.size[1]+200))
+    canvas.config(width=image.size[0], height=image.size[1])
+    stack = []
+    displayNewImage(master, canvas)
 #chooseFile()
 
 def saveImage(image):
@@ -131,6 +134,12 @@ def confirmButton(variable, master, canvas):
     elif variable == "Split Vertically":
         image = imgM.halfNHalfVertical(image, originalImage)
         displayNewImage(master, canvas)
+    elif variable == "Fade Image":
+        image = imgM.fadeFilter(image, originalImage)
+        displayNewImage(master, canvas)
+    elif variable == "Comic Book":
+        image = imgM.comicBook(image)
+        displayNewImage(master, canvas)
 #confirmButton()
 
 def displayNewImage(master, canvas):
@@ -138,7 +147,7 @@ def displayNewImage(master, canvas):
     w,h = image.size
     one = ImageTk.PhotoImage(image)
     master.one = one  # to prevent the image garbage collected.
-    canvas.create_image((w, 0), image=one, anchor='n')
+    canvas.create_image((0, 0), image=one, anchor='nw')
 #displayNewImage()
 
 def deepFry(root, Domcolor, master, canvas):
