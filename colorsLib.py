@@ -5,6 +5,7 @@ Contributors:
     Cameron King
     Nick Jonas
 '''
+"""A basic color library just in case we need it."""
 
 white = (255, 255, 255, 255)
 black = (0, 0, 0, 255)
