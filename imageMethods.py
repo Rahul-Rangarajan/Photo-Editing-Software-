@@ -281,22 +281,3 @@ def fadeFilter(imgOne, imgTwo):
     img = Image.composite(imgOne, imgTwo, fade) #Use mask to create a blend/fade
     return img
 #fadeFilter
-
-def comicBook(image):
-    #Convert image to grey
-    grayC = image.convert("L")
-
-    #Convert image to RGBA
-    grayC = image.convert("RGBA")
-
-    #Convert image to array that is not read only
-    arrayC = np.asarray(grayC).copy()
-
-    #Set colors below 128 to black and other values to white
-    arrayC[arrayC <= 128] = 0  # black
-    arrayC[arrayC >= 128] = 255  # white
-
-    #Convert array back to image and returns
-    black_n_white_cosmo = Image.fromarray(arrayC)
-    return black_n_white_cosmo
-#comicBook()

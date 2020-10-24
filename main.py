@@ -44,7 +44,7 @@ def main():
     #array of functions that create effects and filters of images
     Options = ["Invert Color", "Greyscale", "Black and White", "Create Contour",
                "Add Contrast", "Increase Brightness", "Deep Fry",
-               "Split Horizontally", "Split Vertically", "Fade Image", "Comic Book"]
+               "Split Horizontally", "Split Vertically", "Fade Image"]
     variable = tk.StringVar(master)
     variable.set(Options[0])  # default value
 
@@ -86,8 +86,12 @@ def chooseFile(master, canvas):
 #chooseFile()
 
 def saveImage(image):
-    files = [('Image Files', '*.*')]
-    file = tk.filedialog.asksaveasfile(filetypes=files, defaultextension=files)
+    copy = image
+    filename = filedialog.asksaveasfile(mode='w', defaultextension=".jpg")
+    if not filename:
+        return
+    copy.save(filename)
+
 #saveImage()
 
 def confirmButton(variable, master, canvas):
@@ -132,9 +136,6 @@ def confirmButton(variable, master, canvas):
         displayNewImage(master, canvas)
     elif variable == "Fade Image":
         image = imgM.fadeFilter(image, originalImage)
-        displayNewImage(master, canvas)
-    elif variable == "Comic Book":
-        image = imgM.comicBook(image)
         displayNewImage(master, canvas)
 #confirmButton()
 
