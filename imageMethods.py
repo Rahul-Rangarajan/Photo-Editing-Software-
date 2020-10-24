@@ -62,6 +62,8 @@ def blackNWhite(image):
 
     #Convert array back to image and returns
     black_n_white_cosmo = Image.fromarray(arrayC)
+    # Convert image to RGBA
+    black_n_white_cosmo = black_n_white_cosmo.convert("RGBA")
     return black_n_white_cosmo
 #blackNWhite()
 
@@ -98,7 +100,7 @@ def addBrightness(image):
 
 
 #Deepfry an image
-def deepFry(image):
+def deepFry(image, Domcolor):
     """Deepfrys an input image.
 
     Takes a specified rgb name and increases it in all instances of the picture.
@@ -107,7 +109,6 @@ def deepFry(image):
     """
     
     imageW, imageH = image.size
-    Domcolor = input("Enter the dominant rgb value: ")
     Domcolor = Domcolor.lower()
     if Domcolor == "red":
         imageW, imageH = image.size
@@ -191,32 +192,31 @@ def deepFry(image):
 #Create an image with one half of one image and one half of another,
 #with a horizontal divide
 def halfNHalfHorizontal(image1, image2):
-    #Convert both images to RGBA
+    # Convert both images to RGBA
     image1 = image1.convert("RGBA")
     image2 = image2.convert("RGBA")
 
-    #Determine the size of the image
-    h, w = image1.size
+    # Determine the size of the image
+    h1, w1 = image1.size
 
-    #Create arrays for each image
+    # Create arrays for each image
     image1Array = np.asarray(image1)
     image2Array = np.asarray(image2)
 
-    #Create an empty array with the same dimensions
-    size = image1Array.shape
-    newAr = np.empty((h, w, 4), np.uint8)
+    # Create an empty array with the same dimensions
+    newAr = np.empty((w1, h1, 4), np.uint8)
 
-    #Set each pixel in the new array to the pixel from the proper image
-    for i in range(size[0]):
-        for j in range(size[1]):
-            if i < size[0] // 2:
+    # Set each pixel in the new array to the pixel from the proper image
+    for i in range(w1):
+        for j in range(h1):
+            if i < w1 // 2:
                 newAr[i][j] = image1Array[i][j]
             else:
                 newAr[i][j] = image2Array[i][j]
-        #for
-    #for
+        # for
+    # for
 
-    #Return an image created from the new array
+    # Return an image created from the new array
     return Image.fromarray(newAr)
 #halfNHalfHorizontal()
 
@@ -229,7 +229,6 @@ def halfNHalfVertical(image1, image2):
 
     #Determine the size of the image
     h1, w1 = image1.size
-    h2, w2 = image2.size
 
     #Create arrays for each image
     image1Array = np.asarray(image1)
@@ -274,22 +273,11 @@ def colorscale(image, color):
     return Image.fromarray(final)
 #colorscale()
 
-def fadeFilter(imgOne, imgTwo)
+def fadeFilter(imgOne, imgTwo):
     """Uses a premade Filter to create a fade between two images"""
     imgOneW, imgOneH = imgOne.size
     fade = Image.open("images/FadeFilter.jpg").convert("L") #Grab custom mask
-    fade = fade.resize(imgOneW, imgOneH)
+    fade = fade.resize((imgOneW, imgOneH), Image.NEAREST)
     img = Image.composite(imgOne, imgTwo, fade) #Use mask to create a blend/fade
     return img
 #fadeFilter
-
-#Do Something
-def imageMethod(image, otherParam="null"):
-    #Do something
-    x = 2 + 3
-
-    #Return an Image
-    return image
-#imageMethod
-
-    
