@@ -89,7 +89,7 @@ def chooseFile(master, canvas):
     #else()
     master.geometry(str(image.size[0] + 50) + "x" + str(image.size[1]+200))
     canvas.config(width=image.size[0], height=image.size[1]) #Configs the window around the image
-    #stack = [] #Do we really need this
+    stack = [] #Do we really need this?
     master.update()
     displayNewImage(master, canvas)
 #chooseFile()
