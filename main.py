@@ -63,25 +63,21 @@ def main():
     displayNewImage(startframe, canvas)
 
     master.mainloop()
-    #Where the image should be saved, by default is the same directory
-    #that this file is in
-    #path, filename = os.path.split(os.path.abspath(__file__))
-    #print(filename)
 
 def chooseFile(master, canvas):
-    file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", "*.jpg*"), ("PNG files", "*.png*"),
-                                                                                           ("JPEG files", "*.jpeg*")))
+    file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", ".jpg"), ("PNG files", ".png"),
+                                                                                           ("JPEG files", ".jpeg")))
     global image, originalImage, stack
     image = Image.open(file)
     image.convert("RGBA")
     originalImage = Image.open(file)
     originalImage.convert("RGBA")
-    h,w = image.size
-    if h==w or h>w:
-        image = image.resize((512 , int(512*w/h)))
+    h, w = image.size
+    if h == w or h > w:
+        image = image.resize((512, int(512*w/h)))
         originalImage = originalImage.resize((512, int(512 * w / h)))
     else:
-        image = image.resize((int(512*h/w) , 512))
+        image = image.resize((int(512*h/w), 512))
         originalImage = originalImage.resize((int(512 * h / w), 512))
     master.geometry(str(image.size[0] + 50) + "x" + str(image.size[1]+200))
     canvas.config(width=image.size[0], height=image.size[1])
@@ -90,8 +86,8 @@ def chooseFile(master, canvas):
 #chooseFile()
 
 def saveImage(image):
-    tk.filedialog.asksaveasfilename()
-    image.save("images2/Leia Edited.jpg")
+    files = [('Image Files', '*.*')]
+    file = tk.filedialog.asksaveasfile(filetypes=files, defaultextension=files)
 #saveImage()
 
 def confirmButton(variable, master, canvas):
@@ -144,8 +140,9 @@ def confirmButton(variable, master, canvas):
 
 def displayNewImage(master, canvas):
     global image
+    copy = image
     w,h = image.size
-    one = ImageTk.PhotoImage(image)
+    one = ImageTk.PhotoImage(copy)
     master.one = one  # to prevent the image garbage collected.
     canvas.create_image((0, 0), image=one, anchor='nw')
 #displayNewImage()
@@ -158,11 +155,10 @@ def deepFry(root, Domcolor, master, canvas):
 #deepFry()
 
 def resetImage(master, canvas):
-    global image
-    global originalImage
+    global image, originalImage
     image = originalImage
     displayNewImage(master, canvas)
-
+#resetImage()
 def revertImage(master, canvas):
     global originalImage, image, stack
     if len(stack) == 0:
@@ -173,5 +169,6 @@ def revertImage(master, canvas):
         stack.remove(stack[latest])
 
     displayNewImage(master, canvas)
+#revertImage()
 if __name__ == "__main__":
     main()
