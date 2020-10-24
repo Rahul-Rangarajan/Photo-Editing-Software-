@@ -3,6 +3,7 @@ Contributors:
     Jack Castiglione
     Rahul Rangarajan
     Cameron King
+
     Nick Jonas
 '''
 
@@ -13,8 +14,8 @@ from tkinter import filedialog
 import os
 import imageMethods as imgM
 import colorsLib as colors
-image = Image.open("images/Leia.jpg")
-originalImage = Image.open("images/Leia.jpg")
+image = Image.open("images/Default.png")
+originalImage = Image.open("images/Default.png")
 stack = []
 
 
@@ -65,13 +66,16 @@ def main():
     master.mainloop()
 
 def chooseFile(master, canvas):
+    master.update()
     file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", ".jpg"), ("PNG files", ".png"),
                                                                                            ("JPEG files", ".jpeg")))
+    
     global image, originalImage, stack
-    image = Image.open(file)
-    image.convert("RGBA")
-    originalImage = Image.open(file)
-    originalImage.convert("RGBA")
+    if len(file) > 0:
+        image = Image.open(file)
+        image.convert("RGBA")
+        originalImage = Image.open(file)
+        originalImage.convert("RGBA")
     h, w = image.size
     if h == w or h > w:
         image = image.resize((512, int(512*w/h)))
@@ -82,6 +86,7 @@ def chooseFile(master, canvas):
     master.geometry(str(image.size[0] + 50) + "x" + str(image.size[1]+200))
     canvas.config(width=image.size[0], height=image.size[1])
     stack = []
+    master.update()
     displayNewImage(master, canvas)
 #chooseFile()
 
