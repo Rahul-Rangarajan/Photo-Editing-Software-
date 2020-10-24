@@ -11,10 +11,9 @@ from PIL import Image, ImageFilter, ImageEnhance
 
 #Since this file while never be executed, there is no main() function.
 
-#Invert the colors of an image
 def invertColor(image):
-    #Convert image to  array
-    ar = np.asarray(image)
+    """Invert the colors of an image"""
+    ar = np.asarray(image)#Convert image to  array
 
     #Make blank array with uint8 datatype
     #Default nparray datatype of f8 is unsupported by pillow
@@ -35,9 +34,8 @@ def invertColor(image):
 #invertColor()
 
 
-#Greyscale an image
 def greyscale(image):
-    #Convert image to greyscale
+    """Convert image to greyscale"""
     greyImage = image.convert("L")
 
     #Convert back to RGBA
@@ -48,8 +46,9 @@ def greyscale(image):
 #greyscale()
 
 
-#Convert to purely black and white
+
 def blackNWhite(image):
+    """Converts an image to pure black and white"""
     #Convert image to grey
     grayC = image.convert("L")
 
@@ -68,8 +67,8 @@ def blackNWhite(image):
 #blackNWhite()
 
 
-#Add contour to each image
 def createContour(image):
+    """Apply Contour to an image"""
     #Apply Contour filter
     imageContour = image.copy()
     imageContour= imageContour.filter(ImageFilter.CONTOUR)
@@ -84,8 +83,8 @@ def createContour(image):
 #createContour()
 
 
-#Add conrast to an image
 def addContrast(image):
+    """Add contrast to an image"""
     #Use the pillow contrast method to add contrast
     contrast = ImageEnhance.Contrast(image)
     return contrast.enhance(7.0)
@@ -189,9 +188,13 @@ def deepFry(image, Domcolor):
 #deepFry()
 
 
-#Create an image with one half of one image and one half of another,
-#with a horizontal divide
 def halfNHalfHorizontal(image1, image2):
+    """Creates a half and half image on a horizontal divide
+    
+    The image is composed of one half the original image and
+    one half the "current" image 
+    (The image before halfNHalfHorizontal was selected).
+    """
     # Convert both images to RGBA
     image1 = image1.convert("RGBA")
     image2 = image2.convert("RGBA")
@@ -223,6 +226,12 @@ def halfNHalfHorizontal(image1, image2):
 #Create an image with one half of one image and one half of another,
 #with a vertical divide
 def halfNHalfVertical(image1, image2):
+    """Creates a half and half image on a vertical divide
+    
+    The image is composed of one half the original image and
+    one half the "current" image 
+    (The image before halfNHalfVertical was selected). 
+    """
     #Convert both images to RGBA
     image1 = image1.convert("RGBA")
     image2 = image2.convert("RGBA")
@@ -252,6 +261,7 @@ def halfNHalfVertical(image1, image2):
 #halfNHalfVertical
 
 def colorscale(image, color):
+    """scales down the image while keeping the average colors."""
     #Save image size
     image1 = greyscale(image)
     imageArray = np.asarray(image1)
@@ -273,6 +283,7 @@ def colorscale(image, color):
     return Image.fromarray(final)
 #colorscale()
 
+
 def fadeFilter(imgOne, imgTwo):
     """Uses a premade Filter to create a fade between two images"""
     imgOneW, imgOneH = imgOne.size
@@ -280,4 +291,4 @@ def fadeFilter(imgOne, imgTwo):
     fade = fade.resize((imgOneW, imgOneH), Image.NEAREST)
     img = Image.composite(imgOne, imgTwo, fade) #Use mask to create a blend/fade
     return img
-#fadeFilter
+#fadeFilter()
