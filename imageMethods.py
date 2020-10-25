@@ -94,7 +94,7 @@ def addContrast(image):
 def addBrightness(image):
     #Use the pillow brightness method to add brightness
     bright = ImageEnhance.Brightness(image)
-    return bright.enhance(.75)
+    return bright.enhance(1.1)
 #addBrightness()
 
 
