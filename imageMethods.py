@@ -87,14 +87,14 @@ def addContrast(image):
     """Add contrast to an image"""
     #Use the pillow contrast method to add contrast
     contrast = ImageEnhance.Contrast(image)
-    return contrast.enhance(7.0)
+    return contrast.enhance(1.75)
 #addContrast()
 
 #Add brightness to an image
 def addBrightness(image):
     #Use the pillow brightness method to add brightness
     bright = ImageEnhance.Brightness(image)
-    return bright.enhance(3.0)
+    return bright.enhance(.75)
 #addBrightness()
 
 
@@ -126,7 +126,7 @@ def deepFry(image, Domcolor):
                 image.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
-                
+
         contrast = ImageEnhance.Contrast(image)
         imageCon = contrast.enhance(3.0)
         # upping the contrast to create distinction between colors
@@ -151,7 +151,7 @@ def deepFry(image, Domcolor):
                 image.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
-                
+
         contrast = ImageEnhance.Contrast(image)
         imageCon = contrast.enhance(3.0)
         # upping the contrast to create distinction between colors
@@ -184,7 +184,7 @@ def deepFry(image, Domcolor):
         # upping the brightness to emphasize the bighter colors
         return bright.enhance(3.0)
     #if
-    
+
 #deepFry()
 
 
