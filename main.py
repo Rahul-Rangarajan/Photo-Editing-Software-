@@ -65,6 +65,7 @@ def main():
     master.mainloop()
 
 def chooseFile(master, canvas):
+    master.update()
     file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", ".jpg"), ("PNG files", ".png"),
                                                                                            ("JPEG files", ".jpeg")))
     global image, originalImage, stack
@@ -160,6 +161,7 @@ def resetImage(master, canvas):
     image = originalImage
     displayNewImage(master, canvas)
 #resetImage()
+
 def revertImage(master, canvas):
     global originalImage, image, stack
     if len(stack) == 0:
@@ -171,5 +173,6 @@ def revertImage(master, canvas):
 
     displayNewImage(master, canvas)
 #revertImage()
+
 if __name__ == "__main__":
     main()
