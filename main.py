@@ -13,8 +13,8 @@ from tkinter import filedialog
 import os
 import imageMethods as imgM #Imports all functions needed
 import colorsLib as colors #Import Color library
+file = "images/Default.png"#global variable to keep track of original image file location
 image = Image.open("images/Default.png")#global variable to keep track of current image
-originalImage = Image.open("images/Default.png")#global variable to keep track of original image
 stack = [] #global stack to keep track of all previous edits
 
 
@@ -67,25 +67,26 @@ def main():
 
 def chooseFile(master, canvas):
     """Function that allows the user to navigate their directory for a photo."""
-    global image, originalImage, stack
+    global image, stack, file
     master.update()
-    file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File", filetypes=(("JPG files", ".jpg"), ("PNG files", ".png"),
-    #Selects a file                                                                                       ("JPEG files", ".jpeg")))
+    file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File",
+                                         filetypes=(("JPG files", ".jpg"), ("PNG files", ".png"),("JPEG files", ".jpeg")))
+    # Selects a file
     
     if len(file) > 0: #checks to see if file is not null
         image = Image.open(file)
         image.convert("RGBA")
-        originalImage = Image.open(file)
-        originalImage.convert("RGBA")
     #if()
+    else:
+        image = Image.open("images/Default.png")
+        image.convert("RGBA")
+
     h, w = image.size
     if h == w or h > w: #if statement to help resize file to a maximum of (512,512)
         image = image.resize((512, int(512*w/h)))
-        originalImage = originalImage.resize((512, int(512 * w / h)))
     #if()
     else:
         image = image.resize((int(512*h/w), 512))
-        originalImage = originalImage.resize((int(512 * h / w), 512))
     #else()
     master.geometry(str(image.size[0] + 50) + "x" + str(image.size[1]+200))
     canvas.config(width=image.size[0], height=image.size[1]) #Configs the window around the image
@@ -108,30 +109,39 @@ def saveImage(image):
 
 def confirmButton(variable, master, canvas):
     """Function that receives signals from buttons and calls the matching method."""
-    global stack, image
+    global stack, image, file
+    copy = image
+    originalImage = Image.open(file)
+    h, w = originalImage.size
+    if h == w or h > w:  # if statement to help resize file to a maximum of (512,512)
+        originalImage = originalImage.resize((512, int(512 * w / h)))
+    # if()
+    else:
+        originalImage = originalImage.resize((int(512 * h / w), 512))
+    displayNewImage(master, canvas)
     stack.append(image)
     if variable == "Invert Color":
-        image = imgM.invertColor(image)
+        image = imgM.invertColor(copy)
         displayNewImage(master, canvas)
     #if()
     elif variable == "Greyscale":
-        image = imgM.greyscale(image)
+        image = imgM.greyscale(copy)
         displayNewImage(master, canvas)
     #elif()
     elif variable == "Black and White":
-        image = imgM.blackNWhite(image)
+        image = imgM.blackNWhite(copy)
         displayNewImage(master, canvas)
     #elif()
     elif variable == "Create Contour":
-        image = imgM.createContour(image)
+        image = imgM.createContour(copy)
         displayNewImage(master, canvas)
     #elif()
     elif variable == "Add Contrast":
-        image = imgM.addContrast(image)
+        image = imgM.addContrast(copy)
         displayNewImage(master, canvas)
     #elif()
     elif variable == "Increase Brightness":
-        image = imgM.addBrightness(image)
+        image = imgM.addBrightness(copy)
         displayNewImage(master, canvas)
     #elif()
     elif variable == "Deep Fry":
@@ -176,7 +186,8 @@ def displayNewImage(master, canvas):
 def deepFry(root, Domcolor, master, canvas):
     """Function that calls the imageMethods deepFry() function."""
     global image
-    image = imgM.deepFry(image, Domcolor)
+    copy = image
+    image = imgM.deepFry(copy, Domcolor)
     root.destroy()
     displayNewImage(master, canvas)
 #deepFry()
@@ -184,17 +195,23 @@ def deepFry(root, Domcolor, master, canvas):
 
 def resetImage(master, canvas):
     """Function that resets the image to it's original version."""
-    global image, originalImage
-    image = originalImage
+    global image, file
+    image = Image.open(file)
+    h, w = image.size
+    if h == w or h > w:  # if statement to help resize file to a maximum of (512,512)
+        image = image.resize((512, int(512 * w / h)))
+    # if()
+    else:
+        image = image.resize((int(512 * h / w), 512))
     displayNewImage(master, canvas)
 #resetImage()
 
 
 def revertImage(master, canvas):
     """Function that sets the image back a previous edit."""
-    global originalImage, image, stack
+    global image, stack, file
     if len(stack) == 0: #check to see if stack is empty
-        image = originalImage
+        image = Image.open(file)
     else:
         latest = len(stack)-1
         image = stack[latest] #Set image to top of stack
