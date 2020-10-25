@@ -6,13 +6,10 @@ Contributors:
     Nick Jonas
 '''
 
-import numpy as np
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import filedialog
-import os
 import imageMethods as imgM #Imports all functions needed
-import colorsLib as colors #Import Color library
 file = "images/Default.png"#global variable to keep track of original image file location
 image = Image.open("images/Default.png")#global variable to keep track of current image
 stack = [] #global stack to keep track of all previous edits
