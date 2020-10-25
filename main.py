@@ -79,6 +79,7 @@ def chooseFile(master, canvas):
     #if()
     else:
         image = Image.open("images/Default.png")
+        file = "images/Default.png"
         image.convert("RGBA")
 
     h, w = image.size
@@ -118,7 +119,6 @@ def confirmButton(variable, master, canvas):
     # if()
     else:
         originalImage = originalImage.resize((int(512 * h / w), 512))
-    displayNewImage(master, canvas)
     stack.append(image)
     if variable == "Invert Color":
         image = imgM.invertColor(copy)
