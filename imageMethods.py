@@ -106,14 +106,14 @@ def deepFry(image, Domcolor):
     Also decreases a non specified rgb value so the photo doesn't become
     completely white.
     """
-    
-    imageW, imageH = image.size
+    copy = image
+    imageW, imageH = copy.size
     Domcolor = Domcolor.lower()
     if Domcolor == "red":
-        imageW, imageH = image.size
+        imageW, imageH = copy.size
         for i in range(imageW):  # width
             for j in range(imageH):  # height
-                pixel = image.getpixel((i, j))
+                pixel = copy.getpixel((i, j))
                 # print(pixel)
                 r = pixel[0]
                 g = pixel[1]
@@ -122,7 +122,7 @@ def deepFry(image, Domcolor):
                 if r <= 205:  # increasing red below a point
                     r = r + 50
                 newColor = (r, g, 0)  # modifying the pixel rgb values
-                image.putpixel((i, j), newColor)  # Places in new rgb values
+                copy.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
     #if
@@ -160,7 +160,7 @@ def deepFry(image, Domcolor):
             #for
         #for
     #if
-    contrast = ImageEnhance.Contrast(image)
+    contrast = ImageEnhance.Contrast(copy)
     imageCon = contrast.enhance(3.0)
     # upping the contrast to create distinction between colors
     bright = ImageEnhance.Brightness(imageCon)
