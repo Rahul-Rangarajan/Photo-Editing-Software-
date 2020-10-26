@@ -243,10 +243,9 @@ def halfNHalfVertical(image1, image2):
 #halfNHalfVertical
 
 def colorscale(image, color):
-    """scales down the image while keeping the average colors."""
+    """Greyscales the image based on a color input."""
     #Save image size
-    image1 = greyscale(image)
-    imageArray = np.asarray(image1)
+    imageArray = np.asarray(image)
     height = imageArray.shape[0]
     width = imageArray.shape[1]
 
@@ -258,7 +257,7 @@ def colorscale(image, color):
         for j in range(width):
             #Create an RGB value from the color and grey level
             for k in range(3):
-                final[i][j][k] = (imageArray[i][j][k] / 256) * color[k]
+                final[i][j][k] = (imageArray[i][j][k] / 256 * color[k])
             #Insert alpha value
             final[i][j][3] = color[3]
 
