@@ -9,6 +9,7 @@ Contributors:
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import filedialog
+from colorsLib import chartreuse, cyan, red, green, magenta, yellow, blue
 import imageMethods as imgM #Imports all functions needed
 file = "images/Default.png"#global variable to keep track of original image file location
 image = Image.open("images/Default.png")#global variable to keep track of current image
@@ -40,7 +41,7 @@ def main():
     canvas.pack()
 
     #array of functions that create effects and filters of images
-    Options = ["Invert Color", "Greyscale", "Black and White", "Create Contour",
+    Options = ["Invert Color", "Greyscale", "Black and White", "Color Scale", "Create Contour",
                "Add Contrast", "Increase Brightness", "Deep Fry",
                "Split Horizontally", "Split Vertically", "Fade Image"]
     variable = tk.StringVar(master)
@@ -155,17 +156,29 @@ def confirmButton(variable, master, canvas):
         confirmOptionsButton.pack()#executes the function
     #elif()
     elif variable == "Split Horizontally":
-        image = imgM.halfNHalfHorizontal(image, originalImage)
+        image = imgM.halfNHalfHorizontal(copy, originalImage)
         displayNewImage(master, canvas)
     #elif()
     elif variable == "Split Vertically":
-        image = imgM.halfNHalfVertical(image, originalImage)
+        image = imgM.halfNHalfVertical(copy, originalImage)
         displayNewImage(master, canvas)
     #elif()
     elif variable == "Fade Image":
-        image = imgM.fadeFilter(image, originalImage)
+        image = imgM.fadeFilter(copy, originalImage)
         displayNewImage(master, canvas)
     #elif()
+    elif variable == "Color Scale":
+        root = tk.Toplevel()
+        Options = ["chartreuse", "red", "blue", "green", "yellow", "cyan", "magenta"]  # Options for Deepfry function
+        variable = tk.StringVar(root)
+        variable.set(Options[0])  # default value
+
+        w = tk.OptionMenu(root, variable, *Options)  # create pop up window
+        w.pack()
+
+        confirmOptionsButton = tk.Button(root, text="Confirm",
+                                         command=lambda: colorScale(root, variable.get(), master, canvas))
+        confirmOptionsButton.pack()  # executes the function
 #confirmButton()
 
 
@@ -188,6 +201,33 @@ def deepFry(root, Domcolor, master, canvas):
     root.destroy()
     displayNewImage(master, canvas)
 #deepFry()
+
+def colorScale(root, color, master, canvas):
+    global image
+    copy = image
+    if color == "chartreuse":
+        image = imgM.colorscale(copy, chartreuse)
+    #if()
+    elif color == "red":
+        image = imgM.colorscale(copy, red)
+    # elif()
+    elif color == "blue":
+        image = imgM.colorscale(copy, blue)
+    # elif()
+    elif color == "green":
+        image = imgM.colorscale(copy, green)
+    # elif()
+    elif color == "yellow":
+        image = imgM.colorscale(copy, yellow)
+    # elif()
+    elif color == "cyan":
+        image = imgM.colorscale(copy, cyan)
+    #elif()
+    elif color == "magenta":
+        image = imgM.colorscale(copy, magenta)
+    #elif()
+    root.destroy()
+    displayNewImage(master, canvas)
 
 
 def resetImage(master, canvas):
