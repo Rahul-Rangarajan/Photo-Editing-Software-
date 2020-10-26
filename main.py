@@ -9,7 +9,7 @@ import numpy as np
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import filedialog
-from colorsLib import chartreuse, cyan, red, green, magenta, yellow, blue
+from colorsLib import chartreuse, cyan, red, green, magenta, yellow, blue, transparent
 import imageMethods as imgM #Imports all functions needed
 file = "images/Default.png"#global variable to keep track of original image file location
 image = Image.open("images/Default.png")#global variable to keep track of current image
@@ -68,7 +68,8 @@ def chooseFile(master, canvas):
     global image, stack, file
     master.update()
     file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File",
-                                         filetypes=(("JPG files", ".jpg"), ("PNG files", ".png"),("JPEG files", ".jpeg")))
+                                         filetypes=(("JPG files", ".jpg"), ("PNG files", ".png"),("JPEG files", ".jpeg"),
+                                                    ("All Files", "*.*")))
     # Selects a file
     
     if len(file) > 0: #checks to see if file is not null
@@ -118,7 +119,6 @@ def confirmButton(variable, master, canvas):
     else:
         originalImage = originalImage.resize((int(512 * h / w), 512))
     stack.append(copy)
-    print("1")
     if variable == "Invert Color":
         image = imgM.invertColor(copy)
         displayNewImage(master, canvas)
@@ -160,9 +160,11 @@ def confirmButton(variable, master, canvas):
     #elif()
     elif variable == "Color Scale":
         root = tk.Toplevel()
-        Options = ["chartreuse", "red", "blue", "green", "yellow", "cyan", "magenta"]  # Options for Deepfry function
+        Options = ["Do you like Chartreuse?", "Red", "Chartreuse?", "Blue", '"Chartreuse"', "Green", "Charteeruse", "Yellow",
+                   "Definitely Not Chartreuse", "Cyan", "Chartreuse-ish", "Magenta", "We like Chartreuse", "Transparent",
+                   "White", "Black"]  #Options for Deepfry function
         variable = tk.StringVar(root)
-        variable.set(Options[0])  # default value
+        variable.set(Options[0])  #default value
 
         w = tk.OptionMenu(root, variable, *Options)  # create pop up window
         w.pack()
@@ -208,26 +210,57 @@ def deepFry(root, Domcolor, master, canvas):
 def colorScale(root, color, master, canvas):
     global image
     copy = Image.fromarray(np.asarray(image))
-    if color == "chartreuse":
+    if color == "Do you like Chartreuse?":
         image = imgM.colorscale(copy, chartreuse)
     #if()
-    elif color == "red":
+    elif color == "Red":
         image = imgM.colorscale(copy, red)
-    # elif()
-    elif color == "blue":
+    #elif()
+    elif color == "Chartreuse?":
+        image = imgM.colorscale(copy, chartreuse)
+    #elif()
+    elif color == "Blue":
         image = imgM.colorscale(copy, blue)
     # elif()
-    elif color == "green":
+    elif color == '"Chartreuse"':
+        image = imgM.colorscale(copy, chartreuse)
+    # elif()
+    elif color == "Green":
         image = imgM.colorscale(copy, green)
     # elif()
-    elif color == "yellow":
+    elif color == "Charteeruse":
+        image = imgM.colorscale(copy, chartreuse)
+    # elif()
+    elif color == "Yellow":
         image = imgM.colorscale(copy, yellow)
     # elif()
-    elif color == "cyan":
+    elif color == "Definitely Not Chartreuse":
+        image = imgM.colorscale(copy, chartreuse)
+        print("JK. We lied")
+    # elif()
+    elif color == "Cyan":
         image = imgM.colorscale(copy, cyan)
     #elif()
-    elif color == "magenta":
+    elif color == "Chartreuse-ish":
+        image = imgM.colorscale(copy, chartreuse)
+    #elif()
+    elif color == "Magenta":
         image = imgM.colorscale(copy, magenta)
+    #elif()
+    elif color == "We like Chartreuse":
+        image = imgM.colorscale(copy, chartreuse)
+    #elif()
+    elif color == "Transparent":
+        image = imgM.colorscale(copy, chartreuse)
+        print("Sorry transparent does not work so here is Chartreuse")
+    #elif()
+    elif color == "White":
+        image = imgM.colorscale(copy, chartreuse)
+        print("Sorry White just makes everything white so here is Chartreuse instead")
+    #elif()
+    elif color == "Black":
+        image = imgM.colorscale(copy, chartreuse)
+        print("Sorry Black just makes everything black so here is Chartreuse instead")
     #elif()
     root.destroy()
     displayNewImage(master, canvas)
