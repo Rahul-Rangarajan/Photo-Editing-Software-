@@ -5,7 +5,7 @@ Contributors:
     Cameron King
     Nick Jonas
 '''
-
+import numpy as np
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import filedialog
@@ -97,7 +97,7 @@ def chooseFile(master, canvas):
 
 def saveImage(image):
     """Function that saves the current image when called"""
-    copy = image
+    copy = Image.fromarray(np.asarray(image))
     filename = filedialog.asksaveasfile(mode='w', defaultextension=".jpg")#makes a writable file
     if not filename:
         return
@@ -109,7 +109,7 @@ def saveImage(image):
 def confirmButton(variable, master, canvas):
     """Function that receives signals from buttons and calls the matching method."""
     global stack, image, file
-    copy = image
+    copy = Image.fromarray(np.asarray(image))
     originalImage = Image.open(file)
     h, w = originalImage.size
     if h == w or h > w:  # if statement to help resize file to a maximum of (512,512)
@@ -117,7 +117,8 @@ def confirmButton(variable, master, canvas):
     # if()
     else:
         originalImage = originalImage.resize((int(512 * h / w), 512))
-    stack.append(image)
+    stack.append(copy)
+    print("1")
     if variable == "Invert Color":
         image = imgM.invertColor(copy)
         displayNewImage(master, canvas)
@@ -143,17 +144,7 @@ def confirmButton(variable, master, canvas):
         displayNewImage(master, canvas)
     #elif()
     elif variable == "Deep Fry":
-        root = tk.Toplevel()
-        Options = ["red", "blue", "green"]#Options for Deepfry function
-        variable = tk.StringVar(root)
-        variable.set(Options[0])  # default value
-
-        w = tk.OptionMenu(root, variable, *Options)#create pop up window
-        w.pack()
-
-        confirmOptionsButton = tk.Button(root, text="Confirm",
-                                         command=lambda: deepFry(root, variable.get(), master, canvas))
-        confirmOptionsButton.pack()#executes the function
+        makeDeepFryWindow(master, canvas)
     #elif()
     elif variable == "Split Horizontally":
         image = imgM.halfNHalfHorizontal(copy, originalImage)
@@ -185,18 +176,30 @@ def confirmButton(variable, master, canvas):
 def displayNewImage(master, canvas):
     """Function that displays the newly edited image on the main window."""
     global image
-    copy = image
+    copy = Image.fromarray(np.asarray(image))
     w,h = image.size
     one = ImageTk.PhotoImage(copy)
     master.one = one  # to prevent the image garbage collected.
     canvas.create_image((0, 0), image=one, anchor='nw')
 #displayNewImage()
 
+def makeDeepFryWindow(master, canvas):
+    root = tk.Toplevel()
+    Options = ["red", "blue", "green"]  # Options for Deepfry function
+    variable = tk.StringVar(root)
+    variable.set(Options[0])  # default value
+
+    w = tk.OptionMenu(root, variable, *Options)  # create pop up window
+    w.pack()
+
+    confirmDeepFryButton = tk.Button(root, text="Okay",
+                                     command=lambda: deepFry(root, variable.get(), master, canvas))
+    confirmDeepFryButton.pack()  # executes the function
 
 def deepFry(root, Domcolor, master, canvas):
     """Function that calls the imageMethods deepFry() function."""
     global image
-    copy = image
+    copy = Image.fromarray(np.asarray(image))
     image = imgM.deepFry(copy, Domcolor)
     root.destroy()
     displayNewImage(master, canvas)
@@ -204,7 +207,7 @@ def deepFry(root, Domcolor, master, canvas):
 
 def colorScale(root, color, master, canvas):
     global image
-    copy = image
+    copy = Image.fromarray(np.asarray(image))
     if color == "chartreuse":
         image = imgM.colorscale(copy, chartreuse)
     #if()
@@ -249,11 +252,17 @@ def revertImage(master, canvas):
     global image, stack, file
     if len(stack) == 0: #check to see if stack is empty
         image = Image.open(file)
+        h, w = image.size
+        if h == w or h > w:  # if statement to help resize file to a maximum of (512,512)
+            image = image.resize((512, int(512 * w / h)))
+        # if()
+        else:
+            image = image.resize((int(512 * h / w), 512))
     else:
         latest = len(stack)-1
         image = stack[latest] #Set image to top of stack
         stack.remove(stack[latest])
-
+    #else()
     displayNewImage(master, canvas)
 #revertImage()
 
