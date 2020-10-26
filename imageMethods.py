@@ -94,7 +94,7 @@ def addContrast(image):
 def addBrightness(image):
     #Use the pillow brightness method to add brightness
     bright = ImageEnhance.Brightness(image)
-    return bright.enhance(.75)
+    return bright.enhance(1.1)
 #addBrightness()
 
 
@@ -117,7 +117,6 @@ def deepFry(image, Domcolor):
                 # print(pixel)
                 r = pixel[0]
                 g = pixel[1]
-                b = pixel[2]
                 if g >= 50:  # reducing green beyond a point
                     g = g - 50
                 if r <= 205:  # increasing red below a point
@@ -126,13 +125,6 @@ def deepFry(image, Domcolor):
                 image.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
-
-        contrast = ImageEnhance.Contrast(image)
-        imageCon = contrast.enhance(3.0)
-        # upping the contrast to create distinction between colors
-        bright = ImageEnhance.Brightness(imageCon)
-        # upping the brightness to emphasize the bighter colors
-        return bright.enhance(3.0)
     #if
     
     elif Domcolor == "blue":
@@ -141,7 +133,6 @@ def deepFry(image, Domcolor):
                 pixel = image.getpixel((i, j))
                 # print(pixel)
                 r = pixel[0]
-                g = pixel[1]
                 b = pixel[2]
                 if r >= 50:  # reducing green beyond a point
                     r = r - 50
@@ -151,14 +142,6 @@ def deepFry(image, Domcolor):
                 image.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
-
-        contrast = ImageEnhance.Contrast(image)
-        imageCon = contrast.enhance(3.0)
-        # upping the contrast to create distinction between colors
-
-        bright = ImageEnhance.Brightness(imageCon)
-        # upping the brightness to emphasize the bighter colors
-        return bright.enhance(3.0)
     #if
     
     elif Domcolor == "green":
@@ -166,7 +149,6 @@ def deepFry(image, Domcolor):
             for j in range(imageH):  # height
                 pixel = image.getpixel((i, j))
                 # print(pixel)
-                r = pixel[0]
                 g = pixel[1]
                 b = pixel[2]
                 if b >= 50:  # reducing green beyond a point
@@ -177,13 +159,13 @@ def deepFry(image, Domcolor):
                 image.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
-        contrast = ImageEnhance.Contrast(image)
-        imageCon = contrast.enhance(3.0)
-        # upping the contrast to create distinction between colors
-        bright = ImageEnhance.Brightness(imageCon)
-        # upping the brightness to emphasize the bighter colors
-        return bright.enhance(3.0)
     #if
+    contrast = ImageEnhance.Contrast(image)
+    imageCon = contrast.enhance(3.0)
+    # upping the contrast to create distinction between colors
+    bright = ImageEnhance.Brightness(imageCon)
+    # upping the brightness to emphasize the bighter colors
+    return bright.enhance(3.0)
 
 #deepFry()
 

@@ -6,13 +6,10 @@ Contributors:
     Nick Jonas
 '''
 
-import numpy as np
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import filedialog
-import os
 import imageMethods as imgM #Imports all functions needed
-import colorsLib as colors #Import Color library
 file = "images/Default.png"#global variable to keep track of original image file location
 image = Image.open("images/Default.png")#global variable to keep track of current image
 stack = [] #global stack to keep track of all previous edits
@@ -79,6 +76,7 @@ def chooseFile(master, canvas):
     #if()
     else:
         image = Image.open("images/Default.png")
+        file = "images/Default.png"
         image.convert("RGBA")
 
     h, w = image.size
@@ -118,7 +116,6 @@ def confirmButton(variable, master, canvas):
     # if()
     else:
         originalImage = originalImage.resize((int(512 * h / w), 512))
-    displayNewImage(master, canvas)
     stack.append(image)
     if variable == "Invert Color":
         image = imgM.invertColor(copy)
