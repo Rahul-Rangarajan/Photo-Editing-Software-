@@ -5,7 +5,12 @@ Contributors:
     Cameron King
     Nick Jonas
 '''
-"""A basic color library just in case we need it."""
+"""A basic color library just in case we need it.
+    
+    colorDictionary is our custom made set of colors/rgba values,
+    because ImageColors did not have all the colors
+    we wanted.
+"""
 
 colorDictionary = {'Transparent':(255,255,255,0),
                    'Red':(255, 0, 0, 255),
