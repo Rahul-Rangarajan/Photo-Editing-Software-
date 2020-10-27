@@ -9,7 +9,7 @@ import numpy as np
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import filedialog
-from colorsLib import chartreuse, cyan, red, green, magenta, yellow, blue, transparent
+from colorsLib import colorDictionary
 import imageMethods as imgM #Imports all functions needed
 file = "images/Default.png"#global variable to keep track of original image file location
 image = Image.open("images/Default.png")#global variable to keep track of current image
@@ -18,14 +18,12 @@ stack = [] #global stack to keep track of all previous edits
 
 def main():
     """Main method that initializes the GUI."""
-    print("Hi")
     master = tk.Tk()#Initialize tkinter
     master.configure(bg='grey45') 
 
     startframe = tk.Frame(master)
     canvas = tk.Canvas(startframe, width=512, height=512)
     canvas.configure(bg='grey30')#Create intial window
-
 
     chooseFile(master, canvas) #grab starting file
 
@@ -77,7 +75,12 @@ def main():
 
 
 def chooseFile(master, canvas):
-    """Function that allows the user to navigate their directory for a photo."""
+    """Function that allows the user to navigate their directory for a photo.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image, stack, file
     master.update()
     file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File",
@@ -111,7 +114,11 @@ def chooseFile(master, canvas):
 
 
 def saveImage(image):
-    """Function that saves the current image when called"""
+    """Function that saves the current image when called.
+
+        Parameters:
+                image (PIL.Image.Image) = The Image to be saved.
+    """
     copy = Image.fromarray(np.asarray(image))
     copy = copy.convert("RGB") #problem with saving in rgba
     filename = filedialog.asksaveasfile(mode='w',defaultextension=".jpg")
@@ -124,7 +131,16 @@ def saveImage(image):
 
 
 def confirmButton(variable, master, canvas):
-    """Function that receives signals from buttons and calls the matching method."""
+    """Function that receives signals from buttons and calls the matching method.
+
+        Parameters:
+                variable (str) = A string that holds the chosen option.
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+                
+        Returns:
+                Nothing.
+    """
     global stack, image, file
     copy = Image.fromarray(np.asarray(image))
     originalImage = Image.open(file)
@@ -178,11 +194,9 @@ def confirmButton(variable, master, canvas):
     #elif()
     elif variable == "Color Scale":
         root = tk.Toplevel()
-        Options = ["Do you like Chartreuse?", "Red", "Chartreuse?",
-                   "Blue", '"Chartreuse"', "Green", "Charteeruse",
-                   "Yellow","Definitely Not Chartreuse", "Cyan",
-                   "Chartreuse-ish", "Magenta", "We like Chartreuse",
-                   "Transparent","White", "Black"]  #Options for Colorscale function
+        Options = [ "Red", "Blue", "Green", "Yellow",
+                    "Chartreuse", "Cyan", "Magenta",
+                    "Transparent"]  #Options for Colorscale function
 
         variable = tk.StringVar(root)
         variable.set(Options[0])  #default value
@@ -198,7 +212,12 @@ def confirmButton(variable, master, canvas):
 
 
 def displayNewImage(master, canvas):
-    """Function that displays the newly edited image on the main window."""
+    """Function that displays the newly edited image on the main window.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image
     copy = Image.fromarray(np.asarray(image))
     w,h = image.size
@@ -209,6 +228,12 @@ def displayNewImage(master, canvas):
 
 
 def makeDeepFryWindow(master, canvas):
+    """Function that creates the option window for the DeepFry function.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     root = tk.Toplevel()
     Options = ["red", "blue", "green"]  # Options for Deepfry function
     variable = tk.StringVar(root)
@@ -224,7 +249,14 @@ def makeDeepFryWindow(master, canvas):
 
 
 def deepFry(root, Domcolor, master, canvas):
-    """Function that calls the imageMethods deepFry() function."""
+    """Function that calls the imageMethods deepFry() function.
+
+        Parameters:
+                root (tkinter.Toplevel) = A pop up window.
+                Domcolor (str) = The selected option for the imgM.deepFry function
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image
     copy = Image.fromarray(np.asarray(image))
     image = imgM.deepFry(copy, Domcolor)
@@ -234,67 +266,57 @@ def deepFry(root, Domcolor, master, canvas):
 
 
 def colorScale(root, color, master, canvas):
+    """Function that scales the colors based off of a selected color.
+
+        Scales the image based off a color chosn from the 'Color Scale'
+        variable. It then uses colorDictionary to get the associated tuple value.
+
+        Parameters:
+                root (tkinter.Toplevel) = A pop up window.
+                color (str) = The selected option for the imgM.colorScale function
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image
     copy = Image.fromarray(np.asarray(image))
-    if color == "Do you like Chartreuse?":
-        image = imgM.colorscale(copy, chartreuse)
+    if color == "Red":
+        image = imgM.colorscale(copy, colorDictionary["Red"])
     #if()
-    elif color == "Red":
-        image = imgM.colorscale(copy, red)
-    #elif()
-    elif color == "Chartreuse?":
-        image = imgM.colorscale(copy, chartreuse)
-    #elif()
     elif color == "Blue":
-        image = imgM.colorscale(copy, blue)
-    # elif()
-    elif color == '"Chartreuse"':
-        image = imgM.colorscale(copy, chartreuse)
+        image = imgM.colorscale(copy, colorDictionary["Blue"])
     # elif()
     elif color == "Green":
-        image = imgM.colorscale(copy, green)
-    # elif()
-    elif color == "Charteeruse":
-        image = imgM.colorscale(copy, chartreuse)
+        image = imgM.colorscale(copy, colorDictionary["Green"])
     # elif()
     elif color == "Yellow":
-        image = imgM.colorscale(copy, yellow)
+        image = imgM.colorscale(copy, colorDictionary["Yellow"])
     # elif()
-    elif color == "Definitely Not Chartreuse":
-        image = imgM.colorscale(copy, chartreuse)
-        print("JK. We lied")
+    elif color == "Chartreuse":
+        image = imgM.colorscale(copy, colorDictionary["Chartreuse"])
     # elif()
     elif color == "Cyan":
-        image = imgM.colorscale(copy, cyan)
-    #elif()
-    elif color == "Chartreuse-ish":
-        image = imgM.colorscale(copy, chartreuse)
+        image = imgM.colorscale(copy, colorDictionary["Cyan"])
     #elif()
     elif color == "Magenta":
-        image = imgM.colorscale(copy, magenta)
-    #elif()
-    elif color == "We like Chartreuse":
-        image = imgM.colorscale(copy, chartreuse)
+        image = imgM.colorscale(copy, colorDictionary["Magenta"])
     #elif()
     elif color == "Transparent":
-        image = imgM.colorscale(copy, chartreuse)
-        print("Sorry transparent does not work so here is Chartreuse")
+        image = imgM.colorscale(copy, colorDictionary["Transparent"])
+        print("What did you expect?")
     #elif()
-    elif color == "White":
-        image = imgM.colorscale(copy, chartreuse)
-        print("Sorry White just makes everything white so here is Chartreuse instead")
-    #elif()
-    elif color == "Black":
-        image = imgM.colorscale(copy, chartreuse)
-        print("Sorry Black just makes everything black so here is Chartreuse instead")
-    #elif()
+        
     root.destroy()
     displayNewImage(master, canvas)
 #colorScale()
 
 
 def resetImage(master, canvas):
-    """Function that resets the image to it's original version."""
+    """Function that resets the image to it's original version.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image, file
     image = Image.open(file)
     h, w = image.size
@@ -309,7 +331,12 @@ def resetImage(master, canvas):
 
 
 def revertImage(master, canvas):
-    """Function that sets the image back a previous edit."""
+    """Function that sets the image back a previous edit.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image, stack, file
     if len(stack) == 0: #check to see if stack is empty
         image = Image.open(file)
