@@ -23,55 +23,69 @@ def main():
     master.configure(bg='grey45') 
 
     startframe = tk.Frame(master)
-    canvas = tk.Canvas(startframe, width=512, height=512) #Create intial window
-    canvas.configure(bg='grey30')
+    canvas = tk.Canvas(startframe, width=512, height=512)
+    canvas.configure(bg='grey30')#Create intial window
 
 
     chooseFile(master, canvas) #grab starting file
 
     #Allows for re-choosing image
-    chooseImageButton = tk.Button(master, text="Choose New Image", command=lambda: chooseFile(master, canvas))
+    chooseImageButton = tk.Button(master, text="Choose New Image",
+                                  command=lambda: chooseFile(master, canvas))
     chooseImageButton.pack()
 
     #saves current image
-    saveImageButton = tk.Button(master, text="Save Image", command=lambda: saveImage(image))
+    saveImageButton = tk.Button(master, text="Save Image",
+                                command=lambda: saveImage(image))
+
     saveImageButton.pack()
 
     startframe.pack()
     canvas.pack()
 
     #array of functions that create effects and filters of images
-    Options = ["Invert Color", "Greyscale", "Black and White", "Color Scale", "Create Contour",
-               "Add Contrast", "Increase Brightness", "Deep Fry",
-               "Split Horizontally", "Split Vertically", "Fade Image"]
+    Options = ["Invert Color", "Greyscale", "Black and White",
+               "Color Scale", "Create Contour", "Add Contrast",
+               "Increase Brightness", "Deep Fry","Split Horizontally",
+               "Split Vertically", "Fade Image"]
+    
     variable = tk.StringVar(master)
     variable.set(Options[0])  # default value
 
     w = tk.OptionMenu(master, variable, *Options)
     w.pack() #packs all the options in the scrollbar
 
-    confirmOptionsButton = tk.Button(master, text="Confirm", command=lambda: confirmButton(variable.get(),master, canvas))
+    confirmOptionsButton = tk.Button(master, text="Confirm",
+                                     command=lambda: confirmButton(variable.get(),master, canvas))
+    
     confirmOptionsButton.pack()#Creates the confirm button using the confirmButton() function
 
-    resetImageButton = tk.Button(master, text="Reset", command=lambda: resetImage(master, canvas))
+    resetImageButton = tk.Button(master, text="Reset",
+                                 command=lambda: resetImage(master, canvas))
+    
     resetImageButton.pack() #Creates the reset button using the resetImage() function
 
-    revertImageButton = tk.Button(master, text="Undo", command=lambda: revertImage(master, canvas))
+    revertImageButton = tk.Button(master, text="Undo",
+                                  command=lambda: revertImage(master, canvas))
+    
     revertImageButton.pack()#Creates the Undo button using the revertImage() function
 
     displayNewImage(startframe, canvas)
 
     master.mainloop()
+#main()
+
 
 def chooseFile(master, canvas):
     """Function that allows the user to navigate their directory for a photo."""
     global image, stack, file
     master.update()
     file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File",
-                                         filetypes=(("JPG files", ".jpg"), ("PNG files", ".png"),("JPEG files", ".jpeg"),
-                                                    ("All Files", "*.*")))
+                                         filetypes=(("JPG files", ".jpg"),
+                                                    ("PNG files", ".png"),
+                                                    ("JPEG files", ".jpeg")))
     # Selects a file
-    
+
     if len(file) > 0: #checks to see if file is not null
         image = Image.open(file)
         image.convert("RGBA")
@@ -99,7 +113,9 @@ def chooseFile(master, canvas):
 def saveImage(image):
     """Function that saves the current image when called"""
     copy = Image.fromarray(np.asarray(image))
-    filename = filedialog.asksaveasfile(mode='w', defaultextension=".jpg")#makes a writable file
+    copy = copy.convert("RGB") #problem with saving in rgba
+    filename = filedialog.asksaveasfile(mode='w',defaultextension=".jpg")
+    #makes a writable file
     if not filename:
         return
     #if()
@@ -119,6 +135,8 @@ def confirmButton(variable, master, canvas):
     else:
         originalImage = originalImage.resize((int(512 * h / w), 512))
     stack.append(copy)
+    #else()
+    
     if variable == "Invert Color":
         image = imgM.invertColor(copy)
         displayNewImage(master, canvas)
@@ -160,9 +178,12 @@ def confirmButton(variable, master, canvas):
     #elif()
     elif variable == "Color Scale":
         root = tk.Toplevel()
-        Options = ["Do you like Chartreuse?", "Red", "Chartreuse?", "Blue", '"Chartreuse"', "Green", "Charteeruse", "Yellow",
-                   "Definitely Not Chartreuse", "Cyan", "Chartreuse-ish", "Magenta", "We like Chartreuse", "Transparent",
-                   "White", "Black"]  #Options for Deepfry function
+        Options = ["Do you like Chartreuse?", "Red", "Chartreuse?",
+                   "Blue", '"Chartreuse"', "Green", "Charteeruse",
+                   "Yellow","Definitely Not Chartreuse", "Cyan",
+                   "Chartreuse-ish", "Magenta", "We like Chartreuse",
+                   "Transparent","White", "Black"]  #Options for Colorscale function
+
         variable = tk.StringVar(root)
         variable.set(Options[0])  #default value
 
@@ -172,6 +193,7 @@ def confirmButton(variable, master, canvas):
         confirmOptionsButton = tk.Button(root, text="Confirm",
                                          command=lambda: colorScale(root, variable.get(), master, canvas))
         confirmOptionsButton.pack()  # executes the function
+    #elif()
 #confirmButton()
 
 
@@ -185,6 +207,7 @@ def displayNewImage(master, canvas):
     canvas.create_image((0, 0), image=one, anchor='nw')
 #displayNewImage()
 
+
 def makeDeepFryWindow(master, canvas):
     root = tk.Toplevel()
     Options = ["red", "blue", "green"]  # Options for Deepfry function
@@ -197,6 +220,8 @@ def makeDeepFryWindow(master, canvas):
     confirmDeepFryButton = tk.Button(root, text="Okay",
                                      command=lambda: deepFry(root, variable.get(), master, canvas))
     confirmDeepFryButton.pack()  # executes the function
+#makeDeepFryWindow()
+
 
 def deepFry(root, Domcolor, master, canvas):
     """Function that calls the imageMethods deepFry() function."""
@@ -206,6 +231,7 @@ def deepFry(root, Domcolor, master, canvas):
     root.destroy()
     displayNewImage(master, canvas)
 #deepFry()
+
 
 def colorScale(root, color, master, canvas):
     global image
@@ -264,6 +290,7 @@ def colorScale(root, color, master, canvas):
     #elif()
     root.destroy()
     displayNewImage(master, canvas)
+#colorScale()
 
 
 def resetImage(master, canvas):
@@ -277,6 +304,7 @@ def resetImage(master, canvas):
     else:
         image = image.resize((int(512 * h / w), 512))
     displayNewImage(master, canvas)
+    #else()
 #resetImage()
 
 
@@ -291,6 +319,8 @@ def revertImage(master, canvas):
         # if()
         else:
             image = image.resize((int(512 * h / w), 512))
+        #else()
+    #if()
     else:
         latest = len(stack)-1
         image = stack[latest] #Set image to top of stack
