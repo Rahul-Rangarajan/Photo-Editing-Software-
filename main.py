@@ -258,8 +258,6 @@ def deepFry(root, Domcolor, master, canvas):
                 canvas (tkinter.Canvas) = A tkinter window.
     """
     global image
-    print(type(root))
-    print(type(Domcolor))
     copy = Image.fromarray(np.asarray(image))
     image = imgM.deepFry(copy, Domcolor)
     root.destroy()

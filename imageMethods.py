@@ -12,7 +12,13 @@ from PIL import Image, ImageFilter, ImageEnhance
 #Since this file while never be "executed", there is no main() function.
 
 def invertColor(image):
-    """Invert the colors of an image"""
+    """Invert the colors of an image.
+
+        Parameters:
+                image (PIL.Image.Image) = The image to be modified.
+        Returns:
+                new (PIL.Image.Image) = The modified image
+    """
     ar = np.asarray(image)#Convert image to  array
 
     #Make blank array with uint8 datatype
@@ -35,7 +41,13 @@ def invertColor(image):
 
 
 def greyscale(image):
-    """Convert image to greyscale"""
+    """Convert image to greyscale.
+
+        Parameters:
+                image (PIL.Image.Image) = The image to be modified.
+        Returns:
+                greyImage (PIL.Image.Image) = The modified image.
+    """
     greyImage = image.convert("L")
 
     #Convert back to RGBA
@@ -48,7 +60,13 @@ def greyscale(image):
 
 
 def blackNWhite(image):
-    """Converts an image to pure black and white"""
+    """Converts an image to pure black and white.
+
+        Parameters:
+                image (PIL.Image.Image) = The image to be modified.
+        Returns:
+                black_n_white (PIL.Image.Image) = The modified image.
+    """
     #Convert image to grey
     grayC = image.convert("L")
 
@@ -60,15 +78,21 @@ def blackNWhite(image):
     arrayC[arrayC >= 128] = 255  # white
 
     #Convert array back to image and returns
-    black_n_white_cosmo = Image.fromarray(arrayC)
+    black_n_white = Image.fromarray(arrayC)
     # Convert image to RGBA
-    black_n_white_cosmo = black_n_white_cosmo.convert("RGBA")
-    return black_n_white_cosmo
+    black_n_white = black_n_white.convert("RGBA")
+    return black_n_white
 #blackNWhite()
 
 
 def createContour(image):
-    """Apply Contour to an image"""
+    """Apply Contour to an image.
+
+        Parameters:
+                image (PIL.Image.Image) = The image to be modified.
+        Returns:
+                imageFinal (PIL.Image.Image) = The modified image.
+    """
     #Apply Contour filter
     imageContour = image.copy()
     imageContour= imageContour.filter(ImageFilter.CONTOUR)
@@ -84,7 +108,13 @@ def createContour(image):
 
 
 def addContrast(image):
-    """Add contrast to an image"""
+    """Adds contrast to an image.
+
+        Parameters:
+                image (PIL.Image.Image) = The image to be modified.
+        Returns:
+                contrast.enhance(1.75) (PIL.Image.Image) = The modified Image.
+    """
     #Use the pillow contrast method to add contrast
     contrast = ImageEnhance.Contrast(image)
     return contrast.enhance(1.75)
@@ -92,6 +122,13 @@ def addContrast(image):
 
 
 def addBrightness(image):
+    """Adds Brightness to an image.
+
+        Parameters:
+                image (PIL.Image.Image) = The image to be modified.
+        Returns:
+                bright.enhance(1.1) = The modified image.
+    """
     #Use the pillow brightness method to add brightness
     bright = ImageEnhance.Brightness(image)
     return bright.enhance(1.1)
@@ -106,15 +143,20 @@ def deepFry(image, Domcolor):
     all instances of the picture. Also decreases a
     non specified rgb value so the photo doesn't become
     completely white.
+
+        Parameters:
+                image (PIL.Image.Image) = The image to be modified.
+                Domcolor (str) = The user choice for deciding which color
+                to deepfry with.
+        Returns:
+                bright.enhance(3.0) (PIL.Image.Image) = The modified Image.
     """
-    copy = image
-    imageW, imageH = copy.size
+    imageW, imageH = image.size
     Domcolor = Domcolor.lower()
     if Domcolor == "red":
-        imageW, imageH = copy.size
         for i in range(imageW):  # width
             for j in range(imageH):  # height
-                pixel = copy.getpixel((i, j))
+                pixel = image.getpixel((i, j))
                 # print(pixel)
                 r = pixel[0]
                 g = pixel[1]
@@ -123,7 +165,7 @@ def deepFry(image, Domcolor):
                 if r <= 205:  # increasing red below a point
                     r = r + 50
                 newColor = (r, g, 0)  # modifying the pixel rgb values
-                copy.putpixel((i, j), newColor)  # Places in new rgb values
+                image.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
     #if()
@@ -162,7 +204,7 @@ def deepFry(image, Domcolor):
         #for
     #elif()
                 
-    contrast = ImageEnhance.Contrast(copy)
+    contrast = ImageEnhance.Contrast(image)
     imageCon = contrast.enhance(3.0)
     # upping the contrast to create distinction between colors
     bright = ImageEnhance.Brightness(imageCon)
@@ -172,11 +214,17 @@ def deepFry(image, Domcolor):
 
 
 def halfNHalfHorizontal(image1, image2):
-    """Creates a half and half image on a horizontal divide.
+    """Function that creates a half-n-half image.
     
-    The image is composed of one half the original image and
-    one half the "current" image 
-    (The image before halfNHalfHorizontal was selected).
+    The image is composed of one half of image1 and one
+    half of image2. The images are divided on an invisible
+    horizontal line in the center of the picture.
+
+        Parameters:
+            image1 (PIL.Image.Image) = One of the images to be combined
+            image2 (PIL.Image.Image) = One of the images to be combined
+        Returns:
+            Image.fromarray(newAr) (PIL.Image.Image) = The combined images.
     """
     # Convert both images to RGBA
     image1 = image1.convert("RGBA")
@@ -210,11 +258,19 @@ def halfNHalfHorizontal(image1, image2):
 
 
 def halfNHalfVertical(image1, image2):
-    """Creates a half and half image on a vertical divide.
+    """Function that creates a half-n-half image.
     
-    The image is composed of one half the original image and
-    one half the "current" image 
-    (The image before halfNHalfVertical was selected). 
+    The image is composed of half of image1 and
+    half of image2. The images are divided by an
+    invisible vertical line in the center of the
+    picture.
+
+        Parameters:
+            image1 (PIL.Image.Image) = One of the images to be combined
+            image2 (PIL.Image.Image) = One of the images to be combined
+        Returns:
+            Image.fromarray(newAr) (PIL.Image.Image) = The combined images.
+
     """
     #Convert both images to RGBA
     image1 = image1.convert("RGBA")
@@ -248,7 +304,21 @@ def halfNHalfVertical(image1, image2):
 
 
 def colorscale(image, color):
-    """Greyscales the image based on a color input."""
+    """Function that scales and image's color based on color input.
+
+        This function takes an input color and
+        scales all color in a picture based off
+        of this color, almost as if it were a
+        greyscale photo but with a different color
+        of choice.
+
+        Parameters:
+                image (PIL.Image.Image) = The image to be modified.
+                color (tuple) = A tuple of ints that represent an
+                rgba value.
+        Returns:
+                Image.fromarray(final) (PIL.Image.Image) = The modified image.
+    """
     #Save image size
     imageArray = np.asarray(image)
     height = imageArray.shape[0]
@@ -274,7 +344,17 @@ def colorscale(image, color):
 
 
 def fadeFilter(imgOne, imgTwo):
-    """Uses a premade Filter to create a fade between two images"""
+    """Function that uses a premade image to create a fade effect.
+
+        Fades over two different images using a mask created from
+        a premade filter.
+
+        Parameters:
+                imgOne (PIL.Image.Image) = One of the images to be combined.
+                imgTwo (PIL.Image.Image) = One of the images to be combined.
+        Returns:
+                img (PIL.Image.Image) = The combined images.
+    """
     imgOneW, imgOneH = imgOne.size
     fade = Image.open("images/FadeFilter.jpg").convert("L")
     #Grab custom mask
