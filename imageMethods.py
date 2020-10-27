@@ -172,7 +172,7 @@ def deepFry(image, Domcolor):
 
 
 def halfNHalfHorizontal(image1, image2):
-    """Creates a half and half image on a horizontal divide
+    """Creates a half and half image on a horizontal divide.
     
     The image is composed of one half the original image and
     one half the "current" image 
@@ -210,7 +210,7 @@ def halfNHalfHorizontal(image1, image2):
 
 
 def halfNHalfVertical(image1, image2):
-    """Creates a half and half image on a vertical divide
+    """Creates a half and half image on a vertical divide.
     
     The image is composed of one half the original image and
     one half the "current" image 
