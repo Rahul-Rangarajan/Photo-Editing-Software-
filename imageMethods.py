@@ -9,7 +9,7 @@ Contributors:
 import numpy as np
 from PIL import Image, ImageFilter, ImageEnhance
 
-#Since this file while never be executed, there is no main() function.
+#Since this file while never be "executed", there is no main() function.
 
 def invertColor(image):
     """Invert the colors of an image"""
@@ -90,7 +90,7 @@ def addContrast(image):
     return contrast.enhance(1.75)
 #addContrast()
 
-#Add brightness to an image
+
 def addBrightness(image):
     #Use the pillow brightness method to add brightness
     bright = ImageEnhance.Brightness(image)
@@ -98,12 +98,13 @@ def addBrightness(image):
 #addBrightness()
 
 
-#Deepfry an image
+
 def deepFry(image, Domcolor):
     """Deepfrys an input image.
 
-    Takes a specified rgb name and increases it in all instances of the picture.
-    Also decreases a non specified rgb value so the photo doesn't become
+    Takes a specified rgb name and increases it in
+    all instances of the picture. Also decreases a
+    non specified rgb value so the photo doesn't become
     completely white.
     """
     copy = image
@@ -125,7 +126,7 @@ def deepFry(image, Domcolor):
                 copy.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
-    #if
+    #if()
     
     elif Domcolor == "blue":
         for i in range(imageW):  # width
@@ -142,7 +143,7 @@ def deepFry(image, Domcolor):
                 image.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
-    #if
+    #elif()
     
     elif Domcolor == "green":
         for i in range(imageW):  # width
@@ -159,14 +160,14 @@ def deepFry(image, Domcolor):
                 image.putpixel((i, j), newColor)  # Places in new rgb values
             #for
         #for
-    #if
+    #elif()
+                
     contrast = ImageEnhance.Contrast(copy)
     imageCon = contrast.enhance(3.0)
     # upping the contrast to create distinction between colors
     bright = ImageEnhance.Brightness(imageCon)
     # upping the brightness to emphasize the bighter colors
     return bright.enhance(3.0)
-
 #deepFry()
 
 
@@ -196,8 +197,10 @@ def halfNHalfHorizontal(image1, image2):
         for j in range(h1):
             if i < w1 // 2:
                 newAr[i][j] = image1Array[i][j]
+            #if()
             else:
                 newAr[i][j] = image2Array[i][j]
+            #else()
         # for
     # for
 
@@ -205,8 +208,7 @@ def halfNHalfHorizontal(image1, image2):
     return Image.fromarray(newAr)
 #halfNHalfHorizontal()
 
-#Create an image with one half of one image and one half of another,
-#with a vertical divide
+
 def halfNHalfVertical(image1, image2):
     """Creates a half and half image on a vertical divide
     
@@ -233,14 +235,17 @@ def halfNHalfVertical(image1, image2):
         for j in range(h1):
             if j < h1 // 2:
                 newAr[i][j] = image1Array[i][j]
+            #if()
             else:
                 newAr[i][j] = image2Array[i][j]
+            #else()
         #for
     #for
 
     #Return an image created from the new array
     return Image.fromarray(newAr)
 #halfNHalfVertical
+
 
 def colorscale(image, color):
     """Greyscales the image based on a color input."""
@@ -260,6 +265,9 @@ def colorscale(image, color):
                 final[i][j][k] = (imageArray[i][j][k] / 256 * color[k])
             #Insert alpha value
             final[i][j][3] = color[3]
+            #for
+        #for
+    #for
 
     return Image.fromarray(final)
 #colorscale()
@@ -268,8 +276,10 @@ def colorscale(image, color):
 def fadeFilter(imgOne, imgTwo):
     """Uses a premade Filter to create a fade between two images"""
     imgOneW, imgOneH = imgOne.size
-    fade = Image.open("images/FadeFilter.jpg").convert("L") #Grab custom mask
+    fade = Image.open("images/FadeFilter.jpg").convert("L")
+    #Grab custom mask
     fade = fade.resize((imgOneW, imgOneH), Image.NEAREST)
-    img = Image.composite(imgOne, imgTwo, fade) #Use mask to create a blend/fade
+    img = Image.composite(imgOne, imgTwo, fade)
+    #Use mask to create a blend/fade
     return img
 #fadeFilter()
