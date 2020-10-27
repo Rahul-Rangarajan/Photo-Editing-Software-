@@ -25,7 +25,6 @@ def main():
     canvas = tk.Canvas(startframe, width=512, height=512)
     canvas.configure(bg='grey30')#Create intial window
 
-
     chooseFile(master, canvas) #grab starting file
 
     #Allows for re-choosing image
@@ -76,7 +75,12 @@ def main():
 
 
 def chooseFile(master, canvas):
-    """Function that allows the user to navigate their directory for a photo."""
+    """Function that allows the user to navigate their directory for a photo.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image, stack, file
     master.update()
     file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File",
@@ -110,7 +114,11 @@ def chooseFile(master, canvas):
 
 
 def saveImage(image):
-    """Function that saves the current image when called"""
+    """Function that saves the current image when called.
+
+        Parameters:
+                image (PIL.Image.Image) = The Image to be saved.
+    """
     copy = Image.fromarray(np.asarray(image))
     copy = copy.convert("RGB") #problem with saving in rgba
     filename = filedialog.asksaveasfile(mode='w',defaultextension=".jpg")
@@ -123,7 +131,16 @@ def saveImage(image):
 
 
 def confirmButton(variable, master, canvas):
-    """Function that receives signals from buttons and calls the matching method."""
+    """Function that receives signals from buttons and calls the matching method.
+
+        Parameters:
+                variable (str) = A string that holds the chosen option.
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+                
+        Returns:
+                Nothing.
+    """
     global stack, image, file
     copy = Image.fromarray(np.asarray(image))
     originalImage = Image.open(file)
@@ -195,7 +212,12 @@ def confirmButton(variable, master, canvas):
 
 
 def displayNewImage(master, canvas):
-    """Function that displays the newly edited image on the main window."""
+    """Function that displays the newly edited image on the main window.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image
     copy = Image.fromarray(np.asarray(image))
     w,h = image.size
@@ -206,6 +228,12 @@ def displayNewImage(master, canvas):
 
 
 def makeDeepFryWindow(master, canvas):
+    """Function that creates the option window for the DeepFry function.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     root = tk.Toplevel()
     Options = ["red", "blue", "green"]  # Options for Deepfry function
     variable = tk.StringVar(root)
@@ -221,8 +249,17 @@ def makeDeepFryWindow(master, canvas):
 
 
 def deepFry(root, Domcolor, master, canvas):
-    """Function that calls the imageMethods deepFry() function."""
+    """Function that calls the imageMethods deepFry() function.
+
+        Parameters:
+                root (tkinter.Toplevel) = A pop up window.
+                Domcolor (str) = The selected option for the imgM.deepFry function
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image
+    print(type(root))
+    print(type(Domcolor))
     copy = Image.fromarray(np.asarray(image))
     image = imgM.deepFry(copy, Domcolor)
     root.destroy()
@@ -235,6 +272,12 @@ def colorScale(root, color, master, canvas):
 
         Scales the image based off a color chosn from the 'Color Scale'
         variable. It then uses colorDictionary to get the associated tuple value.
+
+        Parameters:
+                root (tkinter.Toplevel) = A pop up window.
+                color (str) = The selected option for the imgM.colorScale function
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
     """
     global image
     copy = Image.fromarray(np.asarray(image))
@@ -270,7 +313,12 @@ def colorScale(root, color, master, canvas):
 
 
 def resetImage(master, canvas):
-    """Function that resets the image to it's original version."""
+    """Function that resets the image to it's original version.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image, file
     image = Image.open(file)
     h, w = image.size
@@ -285,7 +333,12 @@ def resetImage(master, canvas):
 
 
 def revertImage(master, canvas):
-    """Function that sets the image back a previous edit."""
+    """Function that sets the image back a previous edit.
+
+        Parameters:
+                master (tkinter.Tk) = An instance of tkinter.
+                canvas (tkinter.Canvas) = A tkinter window.
+    """
     global image, stack, file
     if len(stack) == 0: #check to see if stack is empty
         image = Image.open(file)
