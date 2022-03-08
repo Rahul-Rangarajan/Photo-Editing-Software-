@@ -13,7 +13,8 @@ from colorsLib import colorDictionary
 import imageMethods as imgM #Imports all functions needed
 file = "images/Default.png"#global variable to keep track of original image file location
 image = Image.open("images/Default.png")#global variable to keep track of current image
-stack = [] #global stack to keep track of all previous edits
+undo = [] #global stack to keep track of all previous edits
+redo = []#global stack to keep track of all previous undo
 
 
 def main():
@@ -63,10 +64,15 @@ def main():
     
     resetImageButton.pack() #Creates the reset button using the resetImage() function
 
-    revertImageButton = tk.Button(master, text="Undo",
-                                  command=lambda: revertImage(master, canvas))
+    undoImageButton = tk.Button(master, text="Undo",
+                                  command=lambda: undoImage(master, canvas))
     
-    revertImageButton.pack()#Creates the Undo button using the revertImage() function
+    undoImageButton.pack()#Creates the Undo button using the undoImage() function
+
+    redoImageButton = tk.Button(master, text="Redo",
+                                command=lambda: revertImage(master, canvas))
+
+    redoImageButton.pack()  # Creates the redo button using the revertImage() function
 
     displayNewImage(startframe, canvas)
 
@@ -81,7 +87,7 @@ def chooseFile(master, canvas):
                 master (tkinter.Tk) = An instance of tkinter.
                 canvas (tkinter.Canvas) = A tkinter window.
     """
-    global image, stack, file
+    global image, undo, file
     master.update()
     file = tk.filedialog.askopenfilename(initialdir="/", title="Select a File",
                                          filetypes=(("JPG files", ".jpg"),
@@ -91,25 +97,37 @@ def chooseFile(master, canvas):
 
     if len(file) > 0: #checks to see if file is not null
         image = Image.open(file)
+        image2 = Image.open(file)
         image.convert("RGBA")
+        image2.convert("RGBA")
     #if()
     else:
         image = Image.open("images/Default.png")
+        image2 = Image.open("images/Default.png")
         file = "images/Default.png"
         image.convert("RGBA")
+        image2.convert("RGBA")
 
     h, w = image.size
+    h2, w2 = image2.size
     if h == w or h > w: #if statement to help resize file to a maximum of (512,512)
         image = image.resize((512, int(512*w/h)))
     #if()
     else:
         image = image.resize((int(512*h/w), 512))
     #else()
+    if h2 == w2 or h2 > w2:  # if statement to help resize file to a maximum of (512,512)
+        image2 = image2.resize((512, int(512 * w / h)))
+    # if()
+    else:
+        image2 = image2.resize((int(512 * h / w), 512))
+    #else()
     master.geometry(str(image.size[0] + 50) + "x" + str(image.size[1]+200))
     canvas.config(width=image.size[0], height=image.size[1]) #Configs the window around the image
-    stack = [] #Do we really need this?
     master.update()
     displayNewImage(master, canvas)
+
+    undo.append(image2)#adds the base image to the undo stack
 #chooseFile()
 
 
@@ -141,7 +159,7 @@ def confirmButton(variable, master, canvas):
         Returns:
                 Nothing.
     """
-    global stack, image, file
+    global undo, image, file
     copy = Image.fromarray(np.asarray(image))
     originalImage = Image.open(file)
     h, w = originalImage.size
@@ -150,7 +168,7 @@ def confirmButton(variable, master, canvas):
     # if()
     else:
         originalImage = originalImage.resize((int(512 * h / w), 512))
-    stack.append(copy)
+    undo.append(copy)
     #else()
     
     if variable == "Invert Color":
@@ -219,8 +237,8 @@ def displayNewImage(master, canvas):
                 canvas (tkinter.Canvas) = A tkinter window.
     """
     global image
+    print(1)
     copy = Image.fromarray(np.asarray(image))
-    w,h = image.size
     one = ImageTk.PhotoImage(copy)
     master.one = one  # to prevent the image garbage collected.
     canvas.create_image((0, 0), image=one, anchor='nw')
@@ -317,45 +335,51 @@ def resetImage(master, canvas):
                 master (tkinter.Tk) = An instance of tkinter.
                 canvas (tkinter.Canvas) = A tkinter window.
     """
-    global image, file
-    image = Image.open(file)
-    h, w = image.size
-    if h == w or h > w:  # if statement to help resize file to a maximum of (512,512)
-        image = image.resize((512, int(512 * w / h)))
-    # if()
-    else:
-        image = image.resize((int(512 * h / w), 512))
+    global image, undo
+
+    while(len(undo)!=1):
+        undo.pop()
+    #while
+    image = undo.pop()
+    undo.append(image)
     displayNewImage(master, canvas)
     #else()
 #resetImage()
 
 
-def revertImage(master, canvas):
+def undoImage(master, canvas):
     """Function that sets the image back a previous edit.
 
         Parameters:
                 master (tkinter.Tk) = An instance of tkinter.
                 canvas (tkinter.Canvas) = A tkinter window.
     """
-    global image, stack, file
-    if len(stack) == 0: #check to see if stack is empty
-        image = Image.open(file)
-        h, w = image.size
-        if h == w or h > w:  # if statement to help resize file to a maximum of (512,512)
-            image = image.resize((512, int(512 * w / h)))
-        # if()
-        else:
-            image = image.resize((int(512 * h / w), 512))
-        #else()
+    global image, undo, redo
+    if len(undo) == 1: #check to see if undo stack is empty
+        image = undo[0]
     #if()
     else:
-        latest = len(stack)-1
-        image = stack[latest] #Set image to top of stack
-        stack.remove(stack[latest])
+        redo.append(image)
+        image = undo.pop()  # Set image to top of undo stack
+
+
     #else()
     displayNewImage(master, canvas)
-#revertImage()
+#undoImage()
 
+def revertImage(master, canvas):
+    """Function that is ctrl+ y to undo's ctrl+z.
+
+            Parameters:
+                    master (tkinter.Tk) = An instance of tkinter.
+                    canvas (tkinter.Canvas) = A tkinter window.
+    """
+    global undo, redo, image
+    if len(redo) != 0:
+        undo.append(image)
+        image = redo.pop()  # Set image to top of undo stack
+    #if()
+    displayNewImage(master, canvas)
 
 if __name__ == "__main__":
     """Calls main function."""
