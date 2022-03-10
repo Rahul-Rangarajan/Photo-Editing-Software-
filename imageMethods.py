@@ -62,21 +62,20 @@ def blackNWhite(image):
         Returns:
                 black_n_white (PIL.Image.Image) = The modified image.
     """
-    #Convert image to grey
-    grayC = image.convert("L")
+    #Convert image to array
+    ar = np.asarray(image.convert("RGBA"))
 
-    #Convert image to array that is not read only
-    arrayC = np.asarray(grayC).copy()
+    #Separate array into parts
+    color = np.asarray(ar.dot([1/3, 1/3, 1/3, 0]), np.uint8)
+    alpha = np.asarray(ar.dot([0,0,0,1]), np.uint8)
 
-    #Set colors below 128 to black and other values to white
-    arrayC[arrayC <= 128] = 0  # black
-    arrayC[arrayC >= 128] = 255  # white
+    #Modify color array to set values
+    color[color >= 128] = 255
+    color[color < 128] = 0
 
-    #Convert array back to image and returns
-    black_n_white = Image.fromarray(arrayC)
-    # Convert image to RGBA
-    black_n_white = black_n_white.convert("RGBA")
-    return black_n_white
+    #Recombine parts and return
+    out = np.asarray(np.asarray([color.T, color.T, color.T, alpha.T]).T, np.uint8)
+    return Image.fromarray(out)
 #blackNWhite()
 
 
