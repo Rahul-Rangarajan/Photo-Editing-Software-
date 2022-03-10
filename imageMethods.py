@@ -40,13 +40,16 @@ def greyscale(image):
         Returns:
                 greyImage (PIL.Image.Image) = The modified image.
     """
-    greyImage = image.convert("L")
+    #Convert image to array
+    ar = np.asarray(image.convert("RGBA"))
 
-    #Convert back to RGBA
-    greyImage = greyImage.convert("RGBA")
+    #Separate array into parts
+    color = np.asarray(ar.dot([1/3, 1/3, 1/3, 0]), np.uint8)
+    alpha = np.asarray(ar.dot([0,0,0,1]), np.uint8)
 
-    #returns greyscaled image
-    return greyImage
+    #Recombine parts and return
+    out = np.asarray(np.asarray([color.T, color.T, color.T, alpha.T]).T, np.uint8)
+    return Image.fromarray(out)
 #greyscale()
 
 
@@ -312,26 +315,22 @@ def colorscale(image, color):
                 Image.fromarray(final) (PIL.Image.Image) = The modified image.
     """
     #Save image size
-    imageArray = np.asarray(image)
+    imageArray = np.asarray(image.convert("RGBA"))
     height = imageArray.shape[0]
     width = imageArray.shape[1]
 
     #Create final location
     final = np.ndarray(shape=(height, width, 4), dtype=np.uint8)
 
+    start = time.perf_counter()
     #Perform an operation for each pixel in the image
-    for i in range(height):
-        for j in range(width):
-            #Create an RGB value from the color and grey level
-            for k in range(3):
-                final[i][j][k] = (imageArray[i][j][k] / 256 * color[k])
-            #Insert alpha value
-            final[i][j][3] = color[3]
-            #for
-        #for
-    #for
+    out = np.asarray(imageArray * color / 255, np.uint8)
+    
+    end = time.perf_counter()
+    print(end - start)
+    print(type(color))
 
-    return Image.fromarray(final)
+    return Image.fromarray(out)
 #colorscale()
 
 
