@@ -74,11 +74,10 @@ def main():
 
     redoImageButton.pack()  # Creates the redo button using the revertImage() function
 
-    displayNewImage(startframe, canvas)
+    displayNewImage(master, canvas)
 
     master.mainloop()
 #main()
-
 
 def chooseFile(master, canvas):
     """Function that allows the user to navigate their directory for a photo.
@@ -97,39 +96,19 @@ def chooseFile(master, canvas):
 
     if len(file) > 0: #checks to see if file is not null
         image = Image.open(file)
-        image2 = Image.open(file)
         image.convert("RGBA")
-        image2.convert("RGBA")
     #if()
     else:
         image = Image.open("images/Default.png")
-        image2 = Image.open("images/Default.png")
         file = "images/Default.png"
         image.convert("RGBA")
-        image2.convert("RGBA")
+    #else
 
-    h, w = image.size
-    h2, w2 = image2.size
-    if h == w or h > w: #if statement to help resize file to a maximum of (512,512)
-        image = image.resize((512, int(512*w/h)))
-    #if()
-    else:
-        image = image.resize((int(512*h/w), 512))
-    #else()
-    if h2 == w2 or h2 > w2:  # if statement to help resize file to a maximum of (512,512)
-        image2 = image2.resize((512, int(512 * w / h)))
-    # if()
-    else:
-        image2 = image2.resize((int(512 * h / w), 512))
-    #else()
-    master.geometry(str(image.size[0] + 50) + "x" + str(image.size[1]+200))
-    canvas.config(width=image.size[0], height=image.size[1]) #Configs the window around the image
-    master.update()
+    undo.clear()  # clears the undo stack
+    undo.append(image)  # adds the base image to the undo stack
+
     displayNewImage(master, canvas)
-
-    undo.append(image2)#adds the base image to the undo stack
 #chooseFile()
-
 
 def saveImage(image):
     """Function that saves the current image when called.
@@ -147,7 +126,6 @@ def saveImage(image):
     copy.save(filename)#saves the file
 #saveImage()
 
-
 def confirmButton(variable, master, canvas):
     """Function that receives signals from buttons and calls the matching method.
 
@@ -162,13 +140,8 @@ def confirmButton(variable, master, canvas):
     global undo, image, file
     copy = Image.fromarray(np.asarray(image))
     originalImage = Image.open(file)
-    h, w = originalImage.size
-    if h == w or h > w:  # if statement to help resize file to a maximum of (512,512)
-        originalImage = originalImage.resize((512, int(512 * w / h)))
-    # if()
-    else:
-        originalImage = originalImage.resize((int(512 * h / w), 512))
     undo.append(copy)
+    redo.clear()
     #else()
     
     if variable == "Invert Color":
@@ -228,7 +201,6 @@ def confirmButton(variable, master, canvas):
     #elif()
 #confirmButton()
 
-
 def displayNewImage(master, canvas):
     """Function that displays the newly edited image on the main window.
 
@@ -237,13 +209,23 @@ def displayNewImage(master, canvas):
                 canvas (tkinter.Canvas) = A tkinter window.
     """
     global image
-    print(1)
     copy = Image.fromarray(np.asarray(image))
+    h,w= copy.size
+    if h == w or h > w: #if statement to help resize file to a maximum of (512,512)
+        copy = copy.resize((750, int(750*w/h)))
+    #if()
+    else:
+        copy = copy.resize((int(750*h/w), 750))
+    #else
+    master.geometry(str(copy.size[0] +50) + "x" + str(copy.size[1] + 200))
+    canvas.config(width=copy.size[0], height=copy.size[1])  # Configs the window around the image
+    master.update()
+
     one = ImageTk.PhotoImage(copy)
     master.one = one  # to prevent the image garbage collected.
+
     canvas.create_image((0, 0), image=one, anchor='nw')
 #displayNewImage()
-
 
 def makeDeepFryWindow(master, canvas):
     """Function that creates the option window for the DeepFry function.
@@ -265,7 +247,6 @@ def makeDeepFryWindow(master, canvas):
     confirmDeepFryButton.pack()  # executes the function
 #makeDeepFryWindow()
 
-
 def deepFry(root, Domcolor, master, canvas):
     """Function that calls the imageMethods deepFry() function.
 
@@ -281,7 +262,6 @@ def deepFry(root, Domcolor, master, canvas):
     root.destroy()
     displayNewImage(master, canvas)
 #deepFry()
-
 
 def colorScale(root, color, master, canvas):
     """Function that scales the colors based off of a selected color.
@@ -327,7 +307,6 @@ def colorScale(root, color, master, canvas):
     displayNewImage(master, canvas)
 #colorScale()
 
-
 def resetImage(master, canvas):
     """Function that resets the image to it's original version.
 
@@ -337,15 +316,12 @@ def resetImage(master, canvas):
     """
     global image, undo
 
-    while(len(undo)!=1):
-        undo.pop()
-    #while
-    image = undo.pop()
-    undo.append(image)
+    undo.append(image)#add the original image to the stack
+    image = undo[0]#set the original image as the current image
+
     displayNewImage(master, canvas)
     #else()
 #resetImage()
-
 
 def undoImage(master, canvas):
     """Function that sets the image back a previous edit.
