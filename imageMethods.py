@@ -146,59 +146,33 @@ def deepFry(image, Domcolor):
         Returns:
                 bright.enhance(3.0) (PIL.Image.Image) = The modified Image.
     """
-    imageW, imageH = image.size
     Domcolor = Domcolor.lower()
+    imageAr = np.asarray(image.convert("RGBA"))
+    
     if Domcolor == "red":
-        for i in range(imageW):  # width
-            for j in range(imageH):  # height
-                pixel = image.getpixel((i, j))
-                # print(pixel)
-                r = pixel[0]
-                g = pixel[1]
-                if g >= 50:  # reducing green beyond a point
-                    g = g - 50
-                if r <= 205:  # increasing red below a point
-                    r = r + 50
-                newColor = (r, g, 0)  # modifying the pixel rgb values
-                image.putpixel((i, j), newColor)  # Places in new rgb values
-            #for
-        #for
+        newAr = imageAr + [+50, -50, 0, 0]
+        newAr[newAr > 255] = 255
+        newAr[newAr < 0] = 0
+        newAr = np.array(newAr, np.uint8)
+        image=Image.fromarray(newAr)
     #if()
     
     elif Domcolor == "blue":
-        for i in range(imageW):  # width
-            for j in range(imageH):  # height
-                pixel = image.getpixel((i, j))
-                # print(pixel)
-                r = pixel[0]
-                b = pixel[2]
-                if r >= 50:  # reducing green beyond a point
-                    r = r - 50
-                if b <= 205:  # increasing red below a point
-                    b = b + 50
-                newColor = (r, 0, b)  # modifying the pixel rgb values
-                image.putpixel((i, j), newColor)  # Places in new rgb values
-            #for
-        #for
+        newAr = imageAr + [-50, 0, +50, 0]
+        newAr[newAr > 255] = 255
+        newAr[newAr < 0] = 0
+        newAr = np.array(newAr, np.uint8)
+        image=Image.fromarray(newAr)
     #elif()
     
     elif Domcolor == "green":
-        for i in range(imageW):  # width
-            for j in range(imageH):  # height
-                pixel = image.getpixel((i, j))
-                # print(pixel)
-                g = pixel[1]
-                b = pixel[2]
-                if b >= 50:  # reducing green beyond a point
-                    b = b - 50
-                if g <= 205:  # increasing red below a point
-                    g = g + 50
-                newColor = (0, g, b)  # modifying the pixel rgb values
-                image.putpixel((i, j), newColor)  # Places in new rgb values
-            #for
-        #for
+        newAr = imageAr + [0, +50, -50, 0]
+        newAr[newAr > 255] = 255
+        newAr[newAr < 0] = 0
+        newAr = np.array(newAr, np.uint8)
+        image=Image.fromarray(newAr)
     #elif()
-                
+    
     contrast = ImageEnhance.Contrast(image)
     imageCon = contrast.enhance(3.0)
     # upping the contrast to create distinction between colors
@@ -316,18 +290,10 @@ def colorscale(image, color):
     """
     #Save image size
     imageArray = np.asarray(image.convert("RGBA"))
-    height = imageArray.shape[0]
-    width = imageArray.shape[1]
 
-    #Create final location
-    final = np.ndarray(shape=(height, width, 4), dtype=np.uint8)
-
-    start = time.perf_counter()
     #Perform an operation for each pixel in the image
     out = np.asarray(imageArray * color / 255, np.uint8)
     
-    end = time.perf_counter()
-    print(end - start)
     print(type(color))
 
     return Image.fromarray(out)
