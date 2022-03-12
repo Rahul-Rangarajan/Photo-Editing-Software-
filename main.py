@@ -116,13 +116,14 @@ def saveImage(image):
         Parameters:
                 image (PIL.Image.Image) = The Image to be saved.
     """
-    copy = Image.fromarray(np.asarray(image))
-    copy = copy.convert("RGB") #problem with saving in rgba
-    filename = filedialog.asksaveasfile(mode='w',defaultextension=".jpg")
+    copy = Image.fromarray(np.asarray(image)).convert("RGBA")
+    filename = filedialog.asksaveasfilename(defaultextension=".PNG")
     #makes a writable file
     if not filename:
         return
-    #if()
+    #if
+    elif filename.upper().endswith("JPG") or filename.upper().endswith("JPEG"):
+        copy = copy.convert("RGB")
     copy.save(filename)#saves the file
 #saveImage()
 
