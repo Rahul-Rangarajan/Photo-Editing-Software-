@@ -1,7 +1,10 @@
-# Week2Project #
+# Photo Editing Software #
 
-This is our project for the 2nd week of CSC355: Open Source Development. This program uses a GUI that edits images with 
-custom made "filters" made from the Python Imaging Library(Pillow). The editable photos are included in the "images" folder.
+This project is an extension of a previous project that is now functioning as a capstone submission for contributors 
+Rahul Rangarajan and Jack Castiglione. This program uses a tkinter based GUI and the pillow imaging library, which
+is an open-source version of PIL (Python Imaging Library) to allow users to open, customize, and save images using 
+a specific set of tools provided to the user through programmed image altering methods. The software supports a 
+variety of image formats, including (but not limited to) PNG and JPEG.
 
 ### Requirements ###
 
@@ -19,6 +22,9 @@ pip install Pillow
 ### Installation ###
 
 Simply download the contents of this repository and run main.py.
+```
+python main.py
+```
 
 ### Authors ###
 
@@ -29,7 +35,7 @@ Simply download the contents of this repository and run main.py.
 
 ### Contributions ###
 
-At this moment in time, we aren't taking any pull requests outside our group.
+Pull requests are not open to outside contributors.
 
 ### License ###
 
