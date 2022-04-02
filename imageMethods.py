@@ -79,7 +79,7 @@ def blackNWhite(image):
 #blackNWhite()
 
 
-def createContour(image):
+def createContour(image, scale):
     """Apply Contour to an image.
 
         Parameters:
@@ -93,7 +93,7 @@ def createContour(image):
 
     #Take out some of the color
     enhancer = ImageEnhance.Color(image)
-    image = enhancer.enhance(0.3)  
+    image = enhancer.enhance(scale)
 
     #Blend the images together
     imageFinal = Image.blend(image, imageContour, 0.4)  
@@ -101,7 +101,7 @@ def createContour(image):
 #createContour()
 
 
-def addContrast(image):
+def addContrast(image, scale):
     """Adds contrast to an image.
 
         Parameters:
@@ -111,11 +111,11 @@ def addContrast(image):
     """
     #Use the pillow contrast method to add contrast
     contrast = ImageEnhance.Contrast(image)
-    return contrast.enhance(1.75)
+    return contrast.enhance(scale)
 #addContrast()
 
 
-def addBrightness(image):
+def addBrightness(image, scale):
     """Adds Brightness to an image.
 
         Parameters:
@@ -125,7 +125,7 @@ def addBrightness(image):
     """
     #Use the pillow brightness method to add brightness
     bright = ImageEnhance.Brightness(image)
-    return bright.enhance(1.1)
+    return bright.enhance(scale)
 #addBrightness()
 
 
