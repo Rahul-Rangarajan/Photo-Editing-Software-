@@ -1,8 +1,8 @@
 import numpy as np
 from PIL import Image, ImageTk
 import tkinter as tk
+from tkinter import colorchooser
 from tkinter import filedialog
-from colorsLib import colorDictionary
 import imageMethods as imgM #Imports all functions needed
 
 class imageEditor():
@@ -10,6 +10,8 @@ class imageEditor():
     image = Image.open("images/Default.png")
     undo = []
     redo = []
+    scaleStack = []
+    stackSelect = False
     contrastScale= float(1.0)
     contourScale=1.0
     brightnessScale=1.0
@@ -17,10 +19,7 @@ class imageEditor():
     def __init__(self):
         self.undo.clear()
         self.redo.clear()
-
-        #skew each column *
     #__init__(self)
-
 
     def chooseImage(self, root, canvas):
         root.update()
@@ -98,9 +97,13 @@ class imageEditor():
         """
         copy = Image.fromarray(np.asarray(self.image))
         originalImage = Image.open(self.file)
-        self.undo.append(copy)
+        if self.stackSelect == True:
+            self.scaleStack.append(copy)
+        else:
+            self.undo.append(copy)
         self.redo.clear()
-        # else()
+        print(scale)
+
 
         match numVar:
             case 1:
@@ -116,49 +119,38 @@ class imageEditor():
                 self.displayImage(root, canvas)
 
             case 4:
-                master = tk.Toplevel()
-                Options = ["red", "blue", "green"]  # Options for Deepfry function
-                variable = tk.StringVar(root)
-                variable.set(Options[0])  # default value
-
-                w = tk.OptionMenu(root, variable, *Options)  # create pop up window
-                w.pack()
-
-                confirmDeepFryButton = tk.Button(root, text="Okay",
-                                                 command=lambda: self.deepFry(self, root, variable.get(), master, canvas))
-                confirmDeepFryButton.pack()  # executes the function
-
+                match scale:
+                    case 'red':
+                        self.image = imgM.deepFry(copy, 'red')
+                    case 'blue':
+                        self.image = imgM.deepFry(copy, 'blue')
+                    case 'green':
+                        self.image = imgM.deepFry(copy, 'green')
+                #match
+                self.displayImage(root, canvas)
             case 5:
-                self.image = imgM.halfNHalfHorizontal(copy, originalImage)
-                self.displayImage(root, canvas)
-
-            case 6:
-                self.image = imgM.halfNHalfVertical(copy, originalImage)
-                self.displayImage(root, canvas)
+                match scale:
+                    case 'Half&Half Horizontal':
+                        self.image = imgM.halfNHalfHorizontal(copy, originalImage)
+                        self.displayImage(root, canvas)
+                    case "Half&Half Vertical":
+                        self.image = imgM.halfNHalfVertical(copy, originalImage)
+                        self.displayImage(root, canvas)
 
             case 7:
                 self.image = imgM.fadeFilter(copy, originalImage)
                 self.displayImage(root, canvas)
 
             case 8:
-                master = tk.Toplevel()
-                Options = ["Red", "Blue", "Green", "Yellow",
-                        "Chartreuse", "Cyan", "Magenta",
-                        "Transparent"]  # Options for Colorscale function
+                color_code = colorchooser.askcolor(title="Choose color")[0]
+                color_code = color_code+(255,)
+                self.image = imgM.colorscale(self.image, color_code)
+                self.displayImage(root, canvas)
 
-                variable = tk.StringVar(root)
-                variable.set(Options[0])  # default value
-
-                w = tk.OptionMenu(root, variable, *Options)  # create pop up window
-                w.pack()
-
-                confirmOptionsButton = tk.Button(root, text="Confirm",
-                                                 command=lambda: self.colorScale(self, root, variable.get(), master, canvas))
-                confirmOptionsButton.pack()  # executes the function
             case 9:
                 scaleN = self.scaler(self.contrastScale, scale)
-                self.contrastScale=scale
-                self.image= imgM.addContrast(copy, scaleN)
+                self.contrastScale = scale
+                self.image = imgM.addContrast(copy, scaleN)
                 self.displayImage(root, canvas)
             case 10:
                 scaleN = self.scaler(self.brightnessScale, scale)
@@ -171,7 +163,14 @@ class imageEditor():
                 self.image = imgM.createContour(copy, scaleN)
                 self.displayImage(root, canvas)
         #match
+        if numVar < 9 and self.stackSelect == True:
+            self.undo.append(self.scaleStack)
+            self.stackSelect = False
+        elif numVar >= 9 and self.stackSelect == False:
+            self.stackSelect = True
+
     # confirmButton()
+
     def scaler(self, scaleO, scaleN):
         if scaleN == 0.0:
             scaleN -= scaleO
@@ -180,7 +179,7 @@ class imageEditor():
             scaleN -= scaleO
         return scaleN
     #scaler
-    def deepFry(self, root, Domcolor, master, canvas):
+    def deepFry(self, root, Domcolor, canvas):
         """Function that calls the imageMethods deepFry() function.
 
             Parameters:
@@ -189,58 +188,13 @@ class imageEditor():
                     master (tkinter.Tk) = An instance of tkinter.
                     canvas (tkinter.Canvas) = A tkinter window.
         """
-        global image
-        copy = Image.fromarray(np.asarray(image))
-        image = imgM.deepFry(copy, Domcolor)
-        root.destroy()
-        self.displayImage(master, canvas)
+        copy = Image.fromarray(np.asarray(self.image))
+        self.image = imgM.deepFry(copy, Domcolor)
+        self.displayImage(root, canvas)
     # deepFry()
-    def colorScale(self, root, color, master, canvas):
-        """Function that scales the colors based off of a selected color.
-
-            Scales the image based off a color chosn from the 'Color Scale'
-            variable. It then uses colorDictionary to get the associated tuple value.
-
-            Parameters:
-                    root (tkinter.Toplevel) = A pop up window.
-                    color (str) = The selected option for the imgM.colorScale function
-                    master (tkinter.Tk) = An instance of tkinter.
-                    canvas (tkinter.Canvas) = A tkinter window.
-        """
-        global image
-        copy = Image.fromarray(np.asarray(image))
-        if color == "Red":
-            image = imgM.colorscale(copy, colorDictionary["Red"])
-        # if()
-        elif color == "Blue":
-            image = imgM.colorscale(copy, colorDictionary["Blue"])
-        # elif()
-        elif color == "Green":
-            image = imgM.colorscale(copy, colorDictionary["Green"])
-        # elif()
-        elif color == "Yellow":
-            image = imgM.colorscale(copy, colorDictionary["Yellow"])
-        # elif()
-        elif color == "Chartreuse":
-            image = imgM.colorscale(copy, colorDictionary["Chartreuse"])
-        # elif()
-        elif color == "Cyan":
-            image = imgM.colorscale(copy, colorDictionary["Cyan"])
-        # elif()
-        elif color == "Magenta":
-            image = imgM.colorscale(copy, colorDictionary["Magenta"])
-        # elif()
-        elif color == "Transparent":
-            image = imgM.colorscale(copy, colorDictionary["Transparent"])
-            print("What did you expect?")
-        # elif()
-
-        root.destroy()
-        self.displayImage(master, canvas)
-    # colorScale()
 
     def resetImage(self, root, canvas):
-        """Function that resets the image to it's original version.
+        """Function that resets the image to its original version.
 
             Parameters:
                     root (tkinter.Tk) = An instance of tkinter.
@@ -248,10 +202,41 @@ class imageEditor():
         """
 
         self.undo.append(self.image)  # add the original image to the stack
-        image = self.undo[0]  # set the original image as the current image
+        self.image = self.undo[0]  # set the original image as the current image
 
         self.displayImage(root, canvas)
         # else()
     # resetImage()
 
+    def revertImage(self, master, canvas):
+        """Function that is ctrl+ y to undo's ctrl+z.
+
+                Parameters:
+                        master (tkinter.Tk) = An instance of tkinter.
+                        canvas (tkinter.Canvas) = A tkinter window.
+        """
+        if len(self.redo) != 0:
+            self.undo.append(self.image)
+            self.image = self.redo.pop()  # Set image to top of undo stack
+        #if()
+        self.displayImage(master, canvas)
+    #revertImage()
+
+    def undoImage(self,master, canvas):
+        """Function that sets the image back a previous edit.
+
+            Parameters:
+                    master (tkinter.Tk) = An instance of tkinter.
+                    canvas (tkinter.Canvas) = A tkinter window.
+        """
+        if len(self.undo) == 1:  # check to see if undo stack is empty
+            self.image = self.undo[0]
+        # if()
+        else:
+            self.redo.append(self.image)
+            self.image = self.undo.pop()  # Set image to top of undo stack
+
+        # else()
+        self.displayImage(master, canvas)
+    # undoImage()
 

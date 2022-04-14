@@ -292,8 +292,6 @@ def colorscale(image, color):
 
     #Perform an operation for each pixel in the image
     out = np.asarray(imageArray * color / 255, np.uint8)
-    
-    print(type(color))
 
     return Image.fromarray(out)
 #colorscale()
