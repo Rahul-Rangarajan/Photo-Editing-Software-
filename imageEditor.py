@@ -203,9 +203,8 @@ class imageEditor():
 
         self.undo.append(self.image)  # add the original image to the stack
         self.image = self.undo[0]  # set the original image as the current image
-
+        self.redo.clear()
         self.displayImage(root, canvas)
-        # else()
     # resetImage()
 
     def revertImage(self, master, canvas):

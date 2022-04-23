@@ -7,7 +7,6 @@ Contributors:
 '''
 
 import numpy as np
-import time
 from PIL import Image, ImageFilter, ImageEnhance
 
 #Since this file while never be "executed", there is no main() function.
